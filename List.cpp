@@ -13,10 +13,11 @@ using namespace std;
 #define getInput(output,input) cout << "| " << output << " >"; cin>>input
 
 //custom graphical functions
-const short size = 76;
+const short size = 35;
 inline void printLine(char weight);
 void titleLine(string str, char weight);
-void Container(string str);
+void LeftString(string str);
+void CenterString(string str);
 
 //combine string and int and string
 inline string build(string sA, float sB, string sC) {
@@ -66,28 +67,29 @@ inline void getInfo(){
 /* Displays contents of current node that temp1 is pointing at */
 inline void displayInfo(){
   printLine('-');
-  Container(build("Name   :",-1,temp1 ->name));
-  Container(build("ID     :",   temp1 ->ID,""));
-  Container(      "D.O.B.  ");
-  Container(build("  Year :",   temp1 ->year,""));
-  Container(build("  Month:",   temp1 ->month,""));
-  Container(build("  Day  :",   temp1 ->day,""));
-  Container(build("Height :",   temp1 ->height,""));
+  LeftString(build("Name   :",-1,temp1 ->name));
+  LeftString(build("ID     :",   temp1 ->ID,""));
+  LeftString(      "D.O.B.  ");
+  LeftString(build("  Year :",   temp1 ->year,""));
+  LeftString(build("  Month:",   temp1 ->month,""));
+  LeftString(build("  Day  :",   temp1 ->day,""));
+  LeftString(build("Height :",   temp1 ->height,""));
 }
 
 //Main functions (the fnctions the user calls directly)
 void Display_List();
-void add_start_node();
+// void add_start_node(); //unused
 void add_To_Middle();
-void add_node_at_end();
+// void add_node_at_end(); //unused
+// void delete_start_node();
+void delete_middlenode(int search);
+// void delete_end_node(); //unused
+
 
 //tool kit functions
 inline void createNode();
 inline void displayInfo();
 inline bool empty();
-void delete_start_node();
-void delete_middlenode(int search);
-void delete_end_node();
 void purge_List(); //for garbage collection and purging
 void Modify_Node(int search);
 bool Search_List(int search);
@@ -102,92 +104,67 @@ int main() {
   //running switch
   bool running = true;
 
+  //Print Title
+  printLine('#');
+  CenterString("Dynamic List v1.1");
+  LeftString("");
+
   do{
-    printLine('#');
-    Container("Dynamic List v1.1");
-    Container("");
-    titleLine("Main Menue", '=');
-    Container("");
-    Container("Type 1 to add node   type 5 to display list");
-    Container("Type 2 to delete     type 6 to check if empty");
-    Container("Type 3 to modify     type 7 to purge");
-    Container("type 4 to search     type 9 to end program");
+    printLine('=');
+    CenterString("Main Menue");
     printLine('-');
-    Container("what do you want to do");
-    Container("");
+    CenterString("1 add node     5 display list  ");
+    CenterString("2 delete       6 check if empty");
+    CenterString("3 modify       7 purge         ");
+    CenterString("4 search       9 quit          ");
+    printLine('-');
+    LeftString("what do you want to do");
+    LeftString("");
     getInput("",Menue);
     if (cin.fail()){
-      printLine('*');
       getchar();
       cin.clear();
-      Container("INVALID INPUT");
+      printLine('*');
+      CenterString("INVALID INPUT");
       continue;
     }
     switch (Menue) {
-      case 1:
-      Container("1 To front");
-      Container("2 To middle");
-      Container("3 To back");
-      Container("");
-      getInput("Add", Menue);
-      switch (Menue) {
-        case 1: add_start_node();  break;
-        case 2: add_To_Middle();   break;
-        case 3: add_node_at_end(); break;
-        default:
-        printLine('*');
-        Container("INVALID INPUT");
-      }
-      break;
+      case 1: add_To_Middle();   break;
       case 2:
-        Container("1 From front");
-        Container("2 From middle");
-        Container("3 From back");
-        Container("");
-        getInput("Delete", Menue);
-        switch (Menue) {
-          case 1: delete_start_node(); break;
-          case 2:
-            getInput("ID to delete", Menue);
-            delete_middlenode(Menue);
-          break;
-          case 3: delete_end_node(); break;
-          default:
-            printLine('*');
-            Container("INVALID INPUT");
-        }
+        getInput("ID to delete", Menue);
+        delete_middlenode(Menue);
         break;
       case 3:
         getInput("ID to modify",Menue);
         Modify_Node(Menue);
       break;
       case 4:
-        getInput("ID search for",Menue);
+        getInput("ID to search for",Menue);
         Search_List(Menue);
       case 5: Display_List(); break;
       case 6:
         if(empty()){
           printLine('*');
-          Container("YES");
-          Container("The list is empty!");
+          CenterString("YES");
+          CenterString("The list is empty!");
         }
         else{
           printLine('*');
-          Container("NO");
-          Container("The list is not empty!");
+          CenterString("NO");
+          CenterString("The list is not empty!");
         }
         break;
       case 7: purge_List(); break;
       case 9: running = false; break;
       default:
-        printLine('x');
-        Container("INVALID INPUT");
+        printLine('*');
+        CenterString("INVALID INPUT");
     }
   } while(running);
   printLine('*');
-  Container("Collecting garbage...");
+  LeftString("Collecting garbage...");
   purge_List(); //garbage collection
-  Container("Done!");
+  LeftString("Done!");
   printLine('#'); //terminate console window
   return 0;
 }
@@ -198,13 +175,13 @@ inline void createNode(){
   int ID;
   do{
     ID = rand() % 10000;
-    Container(build("Generated ",ID,""));
+    LeftString(build("Generated ",ID,""));
   }while(Search_List(ID) && !empty());
   // Reserve space for new node and fill it with data
   temp1 = new node;
   temp1 ->ID = ID;
   getInfo(); //get all record information with one single function!
-  Container(build("Assigned ID ", temp1 ->ID ," To Student"));
+  LeftString(build("Assigned ID ", temp1 ->ID ," To Student"));
   temp1 ->nxt = NULL;
 }
 
@@ -227,7 +204,7 @@ void add_start_node(){
 void delete_start_node(){
   if(empty()){
     printLine('*');
-    Container("The list is empty!");
+    CenterString("The list is empty!");
   }
   else {
     temp1 = start_ptr;
@@ -241,13 +218,16 @@ void add_To_Middle(){
   if(empty()){
     add_start_node();
   }
-  else if(start_ptr ->nxt == NULL){
-    add_node_at_end();
-  }
   else{
     createNode();
-    temp1 ->nxt = start_ptr ->nxt;
-    start_ptr ->nxt = temp1;
+    if(temp2 == NULL){
+      temp1 ->nxt = start_ptr;
+      start_ptr = temp1;
+    }
+    else{
+      temp1 ->nxt = temp2 ->nxt;
+      temp2 ->nxt = temp1;
+    }
   }
 }
 
@@ -272,7 +252,7 @@ void add_node_at_end (){
 void delete_end_node(){
   if(empty()){
     printLine('*');
-    Container("The list is empty!");
+    CenterString("The list is empty!");
   }
   else {
     temp1 = start_ptr;
@@ -295,7 +275,7 @@ void delete_end_node(){
 void purge_List(){
   if(empty()){
     printLine('*');
-    Container("The list is alreaddy empty!");
+    CenterString("The list is alreaddy empty!");
   }
   else
     do{
@@ -307,11 +287,11 @@ void purge_List(){
 void Display_List(){
   if(empty()){
     printLine('*');
-    Container("The list is empty!");
+    CenterString("The list is empty!");
   }
   else{
     printLine('=');
-    Container("Student List");
+    CenterString("Student List");
     temp1 = start_ptr;
     do {
       // Display details for what temp points to
@@ -320,7 +300,7 @@ void Display_List(){
       temp1 = temp1 ->nxt;
       if (temp1 == NULL){
         printLine('+');
-        Container("End of list");
+        CenterString("End of list");
       }
     } while (temp1 != NULL);
   }
@@ -335,7 +315,7 @@ inline bool empty(){
 void delete_middlenode(int search){
   if(empty()){
     printLine('*');
-    Container("The list is empty!");
+    LeftString("The list is empty!");
   }
   else if(Search_List(search)){
     temp2 ->nxt = temp1 ->nxt;
@@ -347,7 +327,7 @@ void delete_middlenode(int search){
 void Modify_Node(int search){
   if(empty()){
     printLine('*');
-    Container("The list is empty!");
+    LeftString("The list is empty!");
   }
   else if(Search_List(search)) //returns true if ID is in list and sets pointers
     getInfo(); //get all record information with one single function!
@@ -360,22 +340,25 @@ bool Search_List(int search){
   if(empty());
   else{
     temp1 = start_ptr;
+    temp2 = NULL;
     do {
       if (temp1 ->ID == search){
         displayInfo(); //display info
         return true; //student ID is in list
       }
-      // Move to next node (if present)
-      if (temp1 ->nxt == NULL){
-        printLine('*');
-        Container(build("ID :" , search, " Is not in list"));
-        return false; //student ID is not in list
+      // breaks when temp is greater than so search can end sooner
+      // because list is ordered
+      if (temp1 ->ID > search){
+        break;
       }
+      // Move to next node (if present)
       temp2 = temp1;
       temp1 = temp1 ->nxt;
-    } while (true); //because the return statments are above;
+    } while (temp1 != NULL); //because the return statments are above;
   }
-  return false;
+  printLine('*');
+  LeftString(build("ID :" , search, " Is not in list"));
+  return false; //student ID is not in list
 }
 
 /* prints a chatacter string across the display */
@@ -389,18 +372,31 @@ inline void printLine(char weight){
 void titleLine(string str, char weight){
   cout << "| ";
   int st_len = str.length();
-  int length = st_len;
   cout << str << " ";
-  cout << string(size - length, weight);
+  cout << string(size - st_len, weight);
   cout << "|" << endl;
 }
 
-/* contains a message within the display boundries */
-void Container(string str){
+/* contains a message within the display boundries centered */
+void LeftString(string str){
   cout << "| ";
   int st_len = str.length();
-  int length = st_len - 1;
   cout << str;
-  cout << string(size - length,' ');
+  cout << string(size - (st_len - 1),' ');
+  cout << "|" << endl;
+}
+
+/* contains a message within the display boundries centered */
+void CenterString(string str){
+  cout << "| ";
+  int st_len = str.length() / 2;
+  if(size % 2 != 0)
+    cout << " ";
+  if(str.length() % 2)
+    cout << string(size / 2 - st_len,' ');
+  else
+    cout << string(size / 2 - st_len + 1,' ');
+  cout << str;
+  cout << string(size / 2 - st_len,' ');
   cout << "|" << endl;
 }
