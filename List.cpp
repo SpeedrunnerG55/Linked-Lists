@@ -13,7 +13,7 @@ using namespace std;
 #define getInput(output,input) cout << "| " << output << " >"; cin>>input
 
 //custom graphical functions
-const short size = 35;
+const short display_Width = 35;
 inline void printLine(char weight);
 void titleLine(string str, char weight);
 void LeftString(string str);
@@ -366,39 +366,39 @@ bool Search_List(int search){
 /* prints a chatacter string across the display */
 inline void printLine(char weight){
   cout << "|";
-  cout << string(size + 2, weight);
+  cout << string(display_Width + 2, weight);
   cout << "|" << endl;
 }
 
 /* prints a title then a character string across the display */
 void titleLine(string str, char weight){
   cout << "| ";
-  int st_len = str.length();
+  int str_length = str.length();
   cout << str << " ";
-  cout << string(size - st_len, weight);
+  cout << string(display_Width - str_length, weight);
   cout << "|" << endl;
 }
 
 /* contains a message within the display boundries centered */
 void LeftString(string str){
   cout << "| ";
-  int st_len = str.length();
+  int str_length = str.length();
   cout << str;
-  cout << string(size - (st_len - 1),' ');
+  cout << string(display_Width - (str_length - 1),' ');
   cout << "|" << endl;
 }
 
 /* contains a message within the display boundries centered */
 void CenterString(string str){
   cout << "| ";
-  int st_len = str.length() / 2;
-  if(size % 2 != 0)
+  int str_length = str.length() / 2;
+  if(display_Width % 2 != 0)
     cout << " ";
   if(str.length() % 2)
-    cout << string(size / 2 - st_len,' ');
+    cout << string(display_Width / 2 - str_length,' ');
   else
-    cout << string(size / 2 - st_len + 1,' ');
+    cout << string(display_Width / 2 - str_length + 1,' ');
   cout << str;
-  cout << string(size / 2 - st_len,' ');
+  cout << string(display_Width / 2 - str_length,' ');
   cout << "|" << endl;
 }
