@@ -29,6 +29,7 @@ inline string build(string sA, float sB, string sC) {
   return sA;
 }
 
+/* Struct to contain node information */
 struct node;
 typedef  node *Ptr;
 struct node {
@@ -49,9 +50,8 @@ Ptr start_ptr = NULL;
 Ptr temp1;
 Ptr temp2;
 
-// keep all record specific functions and
-// details in one spot to maintain simplisity
-// and maintinability
+/* Prompts user to input information information
+   into current node that temp1 is pointing at   */
 inline void getInfo(){
   // uncomment this section before release
   temp1 ->year = rand() % 8 + 1994;
@@ -63,6 +63,7 @@ inline void getInfo(){
   // getInput("Enter height", temp1 ->height);
 }
 
+/* Displays contents of current node that temp1 is pointing at */
 inline void displayInfo(){
   printLine('-');
   Container(build("Name   :",-1,temp1 ->name));
@@ -118,8 +119,8 @@ int main() {
     if (cin.fail()){
       printLine('*');
       getchar();
-      Container("INVALID INPUT");
       cin.clear();
+      Container("INVALID INPUT");
       continue;
     }
     switch (Menue) {
@@ -179,7 +180,7 @@ int main() {
       case 7: purge_List(); break;
       case 9: running = false; break;
       default:
-        printLine('*');
+        printLine('x');
         Container("INVALID INPUT");
     }
   } while(running);
@@ -191,6 +192,7 @@ int main() {
   return 0;
 }
 
+/* gets information for ans sets up pointers for new node */
 inline void createNode(){
   printLine('-');
   int ID;
@@ -366,7 +368,7 @@ bool Search_List(int search){
       // Move to next node (if present)
       if (temp1 ->nxt == NULL){
         printLine('*');
-        Container(build("ID " , search, " Is not in list"));
+        Container(build("ID :" , search, " Is not in list"));
         return false; //student ID is not in list
       }
       temp2 = temp1;
