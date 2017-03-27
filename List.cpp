@@ -54,11 +54,12 @@ Ptr temp2;
 /* Prompts user to input information information
    into current node that temp1 is pointing at   */
 inline void getInfo(){
-  // uncomment this section before release
+  // comment this section before release
   temp1 ->year = rand() % 8 + 1994;
   temp1 ->month = rand() % 12 + 1;
   temp1 ->day = rand() % 20 + 1;
   temp1 ->name = "Bob";
+  // uncomment this section before release
   // getInput("Enter name",   temp1 ->name);
   // getInput("Enter age",    temp1 ->age);
   // getInput("Enter height", temp1 ->height);
@@ -141,6 +142,7 @@ int main() {
       case 4:
         getInput("ID to search for",Menue);
         Search_List(Menue);
+        break;
       case 5: Display_List(); break;
       case 6:
         if(empty()){
@@ -174,7 +176,7 @@ inline void createNode(){
   printLine('-');
   int ID;
   do{
-    ID = rand() % 10000;
+    ID = rand() % 100000;
     LeftString(build("Generated ",ID,""));
   }while(Search_List(ID) && !empty());
   // Reserve space for new node and fill it with data
