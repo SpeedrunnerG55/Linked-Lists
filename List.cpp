@@ -20,10 +20,10 @@ void Container(string str);
 
 //combine string and int and string
 inline string build(string sA, float sB, string sC) {
-  if(sB != -1) { //none of the data values will ever be -1 so use it as a null value
+  if(sB != -1) { //none of the values will ever be -1 so use it as a null value
     sA.append(to_string(sB));
-    sA.erase(sA.find_last_not_of('0') + 1, string::npos); //remove trailing 0's
-    sA.erase(sA.find_last_not_of('.') + 1, string::npos); //remove trailng decimal point
+    sA.erase(sA.find_last_not_of('0') + 1, string::npos); //remove trailing '0's
+    sA.erase(sA.find_last_not_of('.') + 1, string::npos); //remove trailng '.'
   }
   sA.append(sC);
   return sA;
@@ -34,7 +34,10 @@ typedef  node *Ptr;
 struct node {
   string name; // Name of up to 20 letters
   int ID; // Student ID (assigned durring insertion)
-  int age; // D.O.B. would be better
+  //DOB
+  int year; // Date of birth
+  int month; // Date of birth
+  int day; // Date of birth
   float height; // In metres
   Ptr prv; // Pointer to previous node
   Ptr nxt; // Pointer to next node
@@ -46,12 +49,15 @@ Ptr start_ptr = NULL;
 Ptr temp1;
 Ptr temp2;
 
-// keep all record specific functions and details in one spot to maintain simplisity
+// keep all record specific functions and
+// details in one spot to maintain simplisity
 // and maintinability
 inline void getInfo(){
-  temp1 ->age = rand() % 5 + 18;
-  temp1 ->name = "Bob";
   // uncomment this section before release
+  temp1 ->year = rand() % 8 + 1994;
+  temp1 ->month = rand() % 12 + 1;
+  temp1 ->day = rand() % 20 + 1;
+  temp1 ->name = "Bob";
   // getInput("Enter name",   temp1 ->name);
   // getInput("Enter age",    temp1 ->age);
   // getInput("Enter height", temp1 ->height);
@@ -61,7 +67,10 @@ inline void displayInfo(){
   printLine('-');
   Container(build("Name   :",-1,temp1 ->name));
   Container(build("ID     :",   temp1 ->ID,""));
-  Container(build("Age    :",   temp1 ->age,""));
+  Container(      "D.O.B.  ");
+  Container(build("  Year :",   temp1 ->year,""));
+  Container(build("  Month:",   temp1 ->month,""));
+  Container(build("  Day  :",   temp1 ->day,""));
   Container(build("Height :",   temp1 ->height,""));
 }
 
@@ -197,6 +206,9 @@ inline void createNode(){
   temp1 ->nxt = NULL;
 }
 
+/* creates a node and if empty points the start pointer to it
+   else it poins it to where the start pointer is pointing to
+   then points the start pointer to it                        */
 void add_start_node(){
   createNode();
   if(empty()){
@@ -208,6 +220,8 @@ void add_start_node(){
   }
 }
 
+/* sets temp node to start pointer then makes the start pointer
+   point to the next node then deletes node wtih temp           */
 void delete_start_node(){
   if(empty()){
     printLine('*');
@@ -220,36 +234,39 @@ void delete_start_node(){
   }
 }
 
+/* if not empty and has at least 2 nodes adds to the node behind the first */
 void add_To_Middle(){
   if(empty()){
-    printLine('*');
-    Container("The list is empty!");
-    return;
+    add_start_node();
   }
   else if(start_ptr ->nxt == NULL){
-    printLine('*');
-    Container("The list has no middle!!");
-    return;
+    add_node_at_end();
   }
-  createNode();
-  temp1 ->nxt = start_ptr ->nxt;
-  start_ptr ->nxt = temp1;
+  else{
+    createNode();
+    temp1 ->nxt = start_ptr ->nxt;
+    start_ptr ->nxt = temp1;
+  }
 }
 
+/* creates a node then carries it to the end and attaches it */
 void add_node_at_end (){
   createNode();
   // Set up link to this node
   if (empty())
   start_ptr = temp1;
   else {
-    temp2 = start_ptr; // We know this is not NULL - list not empty!
+    // carries the temp node to the end and attaches it to the last node
+    temp2 = start_ptr;
     while (temp2 ->nxt != NULL) {
       temp2 = temp2 ->nxt; // Move to next link in chain
     }
-    temp2->nxt = temp1; // makes the last node point to the new node which points to Null
+    temp2->nxt = temp1;
   }
 }
 
+/* if not empty deletes firs node if only one node exists deletes the
+   first node, else it traverses to the end and deletes the last node */
 void delete_end_node(){
   if(empty()){
     printLine('*');
@@ -272,6 +289,7 @@ void delete_end_node(){
   }
 }
 
+/* if not empty will remove the first element untill it is empty */
 void purge_List(){
   if(empty()){
     printLine('*');
@@ -283,6 +301,7 @@ void purge_List(){
     }while(!empty());
 }
 
+/* will display each node untill it reaches the end */
 void Display_List(){
   if(empty()){
     printLine('*');
@@ -305,10 +324,12 @@ void Display_List(){
   }
 }
 
+/* returns boolian value */
 inline bool empty(){
   return (start_ptr == NULL);
 }
 
+/* deletes the node with the ID */
 void delete_middlenode(int search){
   if(empty()){
     printLine('*');
@@ -320,6 +341,7 @@ void delete_middlenode(int search){
   }
 }
 
+/* changes the node with the ID */
 void Modify_Node(int search){
   if(empty()){
     printLine('*');
@@ -329,6 +351,9 @@ void Modify_Node(int search){
     getInfo(); //get all record information with one single function!
 }
 
+/* if not empty traverses the list
+   untill it reaches node with ID handles displaying
+   if not in list message                            */
 bool Search_List(int search){
   if(empty());
   else{
@@ -351,12 +376,14 @@ bool Search_List(int search){
   return false;
 }
 
+/* prints a chatacter string across the display */
 inline void printLine(char weight){
   cout << "|";
   cout << string(size + 2, weight);
   cout << "|" << endl;
 }
 
+/* prints a title then a character string across the display */
 void titleLine(string str, char weight){
   cout << "| ";
   int st_len = str.length();
@@ -366,6 +393,7 @@ void titleLine(string str, char weight){
   cout << "|" << endl;
 }
 
+/* contains a message within the display boundries */
 void Container(string str){
   cout << "| ";
   int st_len = str.length();
