@@ -81,21 +81,18 @@ inline void displayInfo(){
   LeftString(build("Height :",   temp1 ->height,""));
 }
 
-//Main functions (the fnctions the user calls directly)
+//list functions
 void Display_List(); //displays whole list
-// void add_start_node(); //unused
+void add_start_node(); // used in add_To_Middle
 void add_To_Middle(); // used for adding nodes
-// void add_node_at_end(); //unused
-// void delete_start_node(); //unused
+void delete_start_node(); //used in purge_List
 void delete_middlenode(int search); // used for removing nodes
+// void add_node_at_end(); //unused
 // void delete_end_node(); //unused
 inline bool empty(); //returns true of false if list if empty
 void purge_List(); //for garbage collection and purging
 void Modify_Node(int search); // modifies the node that contains the search ID
 bool Search_List(int search); // searches lest for node containing ID
-
-
-//tool kit functions
 inline void createNode(); //sets up new node
 inline void displayInfo(); //displays info for current node
 
@@ -190,9 +187,9 @@ inline void createNode(){
   temp1 ->nxt = NULL;
 }
 
-/* creates a node and if empty points the start pointer to it
-   else it poins it to where the start pointer is pointing to
-   then points the start pointer to it                        */
+/* creates a node and if empty, point the start pointer to it,
+   else, point it to where the start pointer is pointing to
+   then points the start pointer to it (insert at front)      */
 void add_start_node(){
   createNode();
   if(empty()){
@@ -223,12 +220,21 @@ void add_To_Middle(){
   if(empty()){
     add_start_node();
   }
+
   else{
+    // creates node, does a search and sets up pointers for operations
+    // there is no need to do 2 searches when createnode alreaddy did a search
     createNode();
+    // if temp 2 is NULL that means there is only one node in list and it is
+    // is higher than the one being inserted. add new node infront of the one
+    // to keep it in asending order
     if(temp2 == NULL){
       temp1 ->nxt = start_ptr;
       start_ptr = temp1;
     }
+    // else temp 2 will contain the node that is less than the node being added
+    // and temp 1 will contain the node that is greater than it, or null if end
+    // add the new node between temp 2 and temp 1
     else{
       temp1 ->nxt = temp2 ->nxt;
       temp2 ->nxt = temp1;
@@ -236,45 +242,47 @@ void add_To_Middle(){
   }
 }
 
-/* creates a node then carries it to the end and attaches it */
-void add_node_at_end (){
-  createNode();
-  // Set up link to this node
-  if (empty())
-  start_ptr = temp1;
-  else {
-    // carries the temp node to the end and attaches it to the last node
-    temp2 = start_ptr;
-    while (temp2 ->nxt != NULL) {
-      temp2 = temp2 ->nxt; // Move to next link in chain
-    }
-    temp2->nxt = temp1;
-  }
-}
+// UNUSED
+// /* creates a node then carries it to the end and attaches it */
+// void add_node_at_end (){
+//   createNode();
+//   // Set up link to this node
+//   if (empty())
+//   start_ptr = temp1;
+//   else {
+//     // carries the temp node to the end and attaches it to the last node
+//     temp2 = start_ptr;
+//     while (temp2 ->nxt != NULL) {
+//       temp2 = temp2 ->nxt; // Move to next link in chain
+//     }
+//     temp2->nxt = temp1;
+//   }
+// }
 
-/* if not empty deletes firs node if only one node exists deletes the
-   first node, else it traverses to the end and deletes the last node */
-void delete_end_node(){
-  if(empty()){
-    printLine('*');
-    CenterString("The list is empty!");
-  }
-  else {
-    temp1 = start_ptr;
-    if (temp1 ->nxt == NULL){
-      delete temp1;
-      start_ptr = NULL;
-    }
-    else{
-      while (temp1->nxt != NULL){
-        temp2 = temp1;
-        temp1 = temp1 ->nxt;
-      }
-      delete temp1;
-      temp2 ->nxt = NULL;
-    }
-  }
-}
+// UNUSED
+// /* if not empty deletes firs node if only one node exists deletes the
+//    first node, else it traverses to the end and deletes the last node */
+// void delete_end_node(){
+//   if(empty()){
+//     printLine('*');
+//     CenterString("The list is empty!");
+//   }
+//   else {
+//     temp1 = start_ptr;
+//     if (temp1 ->nxt == NULL){
+//       delete temp1;
+//       start_ptr = NULL;
+//     }
+//     else{
+//       while (temp1->nxt != NULL){
+//         temp2 = temp1;
+//         temp1 = temp1 ->nxt;
+//       }
+//       delete temp1;
+//       temp2 ->nxt = NULL;
+//     }
+//   }
+// }
 
 /* if not empty will remove the first element untill it is empty */
 void purge_List(){
@@ -303,11 +311,9 @@ void Display_List(){
       displayInfo();
       // Move to next node (if present)
       temp1 = temp1 ->nxt;
-      if (temp1 == NULL){
-        printLine('+');
-        CenterString("End of list");
-      }
     } while (temp1 != NULL);
+    printLine('+');
+    CenterString("End of list");
   }
 }
 
