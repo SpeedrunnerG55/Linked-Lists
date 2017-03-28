@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 
 /*
@@ -13,7 +14,7 @@ using namespace std;
 #define getInput(output,input) cout << "| " << output << " >"; cin>>input
 
 //custom graphical functions
-const short display_Width = 35;
+const short display_Width = 40;
 inline void printLine(char weight);
 void titleLine(string str, char weight);
 void LeftString(string str);
@@ -54,15 +55,18 @@ Ptr temp2;
 /* Prompts user to input information information
    into current node that temp1 is pointing at   */
 inline void getInfo(){
-  // comment this section before release
-  temp1 ->year = rand() % 8 + 1994;
-  temp1 ->month = rand() % 12 + 1;
-  temp1 ->day = rand() % 20 + 1;
-  temp1 ->name = "Bob";
+  // Debug: comment this section before release
+  // temp1 ->year = rand() % 8 + 1994;
+  // temp1 ->month = rand() % 12 + 1;
+  // temp1 ->day = rand() % 20 + 1;
+  // temp1 ->name = "Bob"; //everyone is Bob
   // uncomment this section before release
-  // getInput("Enter name",   temp1 ->name);
-  // getInput("Enter age",    temp1 ->age);
-  // getInput("Enter height", temp1 ->height);
+  getInput("Enter name",   temp1 ->name);
+  LeftString("Date Of Birth");
+  getInput("Enter year",   temp1 ->year);
+  getInput("Enter month",  temp1 ->month);
+  getInput("Enter day",    temp1 ->day);
+  getInput("Enter height", temp1 ->height);
 }
 
 /* Displays contents of current node that temp1 is pointing at */
@@ -78,22 +82,22 @@ inline void displayInfo(){
 }
 
 //Main functions (the fnctions the user calls directly)
-void Display_List();
+void Display_List(); //displays whole list
 // void add_start_node(); //unused
-void add_To_Middle();
+void add_To_Middle(); // used for adding nodes
 // void add_node_at_end(); //unused
-// void delete_start_node();
-void delete_middlenode(int search);
+// void delete_start_node(); //unused
+void delete_middlenode(int search); // used for removing nodes
 // void delete_end_node(); //unused
+inline bool empty(); //returns true of false if list if empty
+void purge_List(); //for garbage collection and purging
+void Modify_Node(int search); // modifies the node that contains the search ID
+bool Search_List(int search); // searches lest for node containing ID
 
 
 //tool kit functions
-inline void createNode();
-inline void displayInfo();
-inline bool empty();
-void purge_List(); //for garbage collection and purging
-void Modify_Node(int search);
-bool Search_List(int search);
+inline void createNode(); //sets up new node
+inline void displayInfo(); //displays info for current node
 
 int main() {
   //generate random seed
@@ -114,10 +118,9 @@ int main() {
     printLine('=');
     CenterString("Main Menue");
     printLine('-');
-    CenterString("1 add node     5 display list  ");
-    CenterString("2 delete       6 check if empty");
-    CenterString("3 modify       7 purge         ");
-    CenterString("4 search       9 quit          ");
+    CenterString("1 add node  2 delete   3 modify     ");
+    CenterString("4 search    5 display  6 check empty");
+    CenterString("7 purge                9 quit       ");
     printLine('-');
     LeftString("what do you want to do");
     LeftString("");
