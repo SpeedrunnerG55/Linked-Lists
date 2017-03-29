@@ -55,6 +55,7 @@ Ptr temp2;
 /* Prompts user to input information information
    into current node that temp1 is pointing at   */
 inline void getInfo(){
+  printLine('-');
   // Debug: comment this section before release
   // temp1 ->year = rand() % 8 + 1994;
   // temp1 ->month = rand() % 12 + 1;
@@ -230,8 +231,8 @@ void add_To_Middle(){
     // creates node, does a search and sets up pointers for operations
     // there is no need to do 2 searches when createnode alreaddy did a search
     createNode();
-    // if temp 2 is NULL that means there is at lease one node in list and it is
-    // is higher than the one being inserted. add new node infront of the one
+    // if temp 2 is NULL that means the first node is higher than 
+    // the one being inserted. add new node infront of the first
     // to keep it in asending order
     if(temp2 == NULL){
       temp1 ->nxt = start_ptr;
@@ -335,8 +336,8 @@ void delete_middlenode(int search){
   }
   else if(Search_List(search)){
     displayInfo(); //display info
-    // if temp 2 is NULL that means there is only one node in list s
-    // and its ID matches the one being seached for so delete that node
+    // if temp 2 is NULL that means the first node
+    // matches the one being seached for so delete that node
     if (temp2 == NULL)
       delete_start_node();
     else{
