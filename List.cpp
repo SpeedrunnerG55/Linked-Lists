@@ -142,6 +142,7 @@ int main() {
       case 4:
         getInput("ID to search for",Menue);
         Search_List(Menue);
+        displayInfo(); //display info
         break;
       case 5: Display_List(); break;
       case 6:
@@ -175,6 +176,8 @@ int main() {
 inline void createNode(){
   printLine('-');
   int ID;
+  // Search first because search will move temp 1 and 2
+  // to the proper location in list
   do{
     ID = rand() % 100000;
     LeftString(build("Generated ",ID,""));
@@ -217,6 +220,8 @@ void delete_start_node(){
 
 /* if not empty and has at least 2 nodes adds to the node behind the first */
 void add_To_Middle(){
+  printLine('=');
+  CenterString("Add to list");
   if(empty()){
     add_start_node();
   }
@@ -225,7 +230,7 @@ void add_To_Middle(){
     // creates node, does a search and sets up pointers for operations
     // there is no need to do 2 searches when createnode alreaddy did a search
     createNode();
-    // if temp 2 is NULL that means there is only one node in list and it is
+    // if temp 2 is NULL that means there is at lease one node in list and it is
     // is higher than the one being inserted. add new node infront of the one
     // to keep it in asending order
     if(temp2 == NULL){
@@ -329,8 +334,15 @@ void delete_middlenode(int search){
     LeftString("The list is empty!");
   }
   else if(Search_List(search)){
-    temp2 ->nxt = temp1 ->nxt;
-    delete temp1;
+    displayInfo(); //display info
+    // if temp 2 is NULL that means there is only one node in list s
+    // and its ID matches the one being seached for so delete that node
+    if (temp2 == NULL)
+      delete_start_node();
+    else{
+      temp2 ->nxt = temp1 ->nxt;
+      delete temp1;
+    }
   }
 }
 
@@ -348,13 +360,11 @@ void Modify_Node(int search){
    untill it reaches node with ID handles displaying
    if not in list message                            */
 bool Search_List(int search){
-  if(empty());
-  else{
+  if(!empty()){
     temp1 = start_ptr;
     temp2 = NULL;
     do {
       if (temp1 ->ID == search){
-        displayInfo(); //display info
         return true; //student ID is in list
       }
       // breaks when temp is greater than so search can end sooner
