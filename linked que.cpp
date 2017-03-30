@@ -91,7 +91,7 @@ void purge_queue(); //for garbage collection and purging
 bool Search_queue(int search); //used to create unique ID
 inline void createNode(); //sets up new node
 inline void displayInfo(); //displays info for current node
-void back(); //displays contents of back node
+void front(); //displays contents of back node
 
 int main() {
   //generate random seed
@@ -146,7 +146,7 @@ int main() {
         }
         break;
       case 7: purge_queue();   break;
-      case 8: back();          break;
+      case 8: front();          break;
       case 9: running = false; break;
       default:
       CenterString("*****************");
@@ -162,11 +162,9 @@ int main() {
   return 0;
 }
 
-void back(){
+void front(){
   if(!empty()){
-    do{
-      temp1 = temp1 ->nxt;//traverse the list untill the end is reached
-    }while (temp1 ->nxt != NULL);
+    temp1 = start_ptr;
     displayInfo();
   }
   else{
