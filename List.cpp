@@ -14,7 +14,7 @@ using namespace std;
 #define getInput(output,input) cout << "| " << output << " >"; cin>>input
 
 //custom graphical functions
-const short display_Width = 40;
+const short display_Width = 76;
 inline void printLine(char weight);
 void titleLine(string str, char weight);
 void LeftString(string str);
@@ -89,7 +89,7 @@ void add_To_Middle(); // used for adding nodes
 void delete_start_node(); //used in purge_List
 void delete_middlenode(int search); // used for removing nodes
 // void add_node_at_end(); //unused
-// void delete_end_node(); //unused
+// void delete_end_node(); //unused because deleting from front is easier (more eficient)
 inline bool empty(); //returns true of false if list if empty
 void purge_List(); //for garbage collection and purging
 void Modify_Node(int search); // modifies the node that contains the search ID
@@ -102,7 +102,7 @@ int main() {
   srand(time(NULL));
 
   //input variable
-  int Menue;
+  int Menue, ID;
 
   //running switch
   bool running = true;
@@ -116,9 +116,9 @@ int main() {
     printLine('=');
     CenterString("Main Menue");
     printLine('-');
-    CenterString("1 add node  2 delete   3 modify     ");
-    CenterString("4 search    5 display  6 check empty");
-    CenterString("7 purge                9 quit       ");
+    CenterString("1 add     2 delete   3 modify");
+    CenterString("4 search  5 display  6 empty?");
+    CenterString("7 purge              9 quit  ");
     printLine('-');
     LeftString("what do you want to do");
     LeftString("");
@@ -126,43 +126,61 @@ int main() {
     if (cin.fail()){
       getchar();
       cin.clear();
-      printLine('*');
-      CenterString("INVALID INPUT");
+      CenterString("*****************");
+      CenterString("* INVALID INPUT *");
+      CenterString("* NOT A NUMBER  *");
+      CenterString("*****************");
       continue;
     }
     switch (Menue) {
       case 1: add_To_Middle();   break;
-      case 2:
-        getInput("ID to delete", Menue);
-        delete_middlenode(Menue);
+      case 2: getInput("Enter ID to delete", ID);
+      case 3: getInput("Enter ID to modify",ID);
+      case 4: getInput("Enter ID to search for",ID);
+      if (cin.fail()){
+        Menue = 5;
+      }
+      switch (Menue) {
+        case 2:
+        delete_middlenode(ID);
         break;
-      case 3:
-        getInput("ID to modify",Menue);
-        Modify_Node(Menue);
+        case 3:
+        Modify_Node(ID);
+        break;
+        case 4:
+        if(Search_List(ID))
+          displayInfo(); //only display info if ID is present
+        break;
+        case 5:
+        getchar();
+        cin.clear();
+        CenterString("*****************");
+        CenterString("* INVALID INPUT *");
+        CenterString("* NOT A NUMBER  *");
+        CenterString("*****************");
+      }
       break;
-      case 4:
-        getInput("ID to search for",Menue);
-        Search_List(Menue);
-        displayInfo(); //display info
-        break;
       case 5: Display_List(); break;
       case 6:
         if(empty()){
-          printLine('*');
-          CenterString("YES");
-          CenterString("The list is empty!");
+          CenterString("**********************");
+          CenterString("*        YES         *");
+          CenterString("* The list is empty! *");
+          CenterString("**********************");
         }
         else{
-          printLine('*');
-          CenterString("NO");
-          CenterString("The list is not empty!");
+          CenterString("**************************");
+          CenterString("*           NO           *");
+          CenterString("* The list is not empty! *");
+          CenterString("**************************");
         }
         break;
       case 7: purge_List(); break;
       case 9: running = false; break;
       default:
-        printLine('*');
-        CenterString("INVALID INPUT");
+        CenterString("*****************");
+        CenterString("* INVALID INPUT *");
+        CenterString("*****************");
     }
   } while(running);
   printLine('*');
@@ -178,7 +196,8 @@ inline void createNode(){
   printLine('-');
   int ID;
   // Search first because search will move temp 1 and 2
-  // to the proper location in list
+  // to the proper location in list and search will set up
+  // temp 1 and 2 for inserting a node inbetween them if needed
   do{
     ID = rand() % 100000;
     LeftString(build("Generated ",ID,""));
@@ -209,12 +228,14 @@ void add_start_node(){
    point to the next node then deletes node wtih temp           */
 void delete_start_node(){
   if(empty()){
-    printLine('*');
-    CenterString("The list is empty!");
+    CenterString("**********************");
+    CenterString("* The list is empty! *");
+    CenterString("**********************");
   }
   else {
     temp1 = start_ptr;
     start_ptr = start_ptr ->nxt;
+    displayInfo();
     delete temp1;
   }
 }
@@ -231,7 +252,7 @@ void add_To_Middle(){
     // creates node, does a search and sets up pointers for operations
     // there is no need to do 2 searches when createnode alreaddy did a search
     createNode();
-    // if temp 2 is NULL that means the first node is higher than 
+    // if temp 2 is NULL that means the first node is higher than
     // the one being inserted. add new node infront of the first
     // to keep it in asending order
     if(temp2 == NULL){
@@ -266,8 +287,8 @@ void add_To_Middle(){
 // }
 
 // UNUSED
-// /* if not empty deletes firs node if only one node exists deletes the
-//    first node, else it traverses to the end and deletes the last node */
+// /* if not empty, if only one node exists delete the first node,
+//                  else traverses to the end and deletes the last node */
 // void delete_end_node(){
 //   if(empty()){
 //     printLine('*');
@@ -276,6 +297,7 @@ void add_To_Middle(){
 //   else {
 //     temp1 = start_ptr;
 //     if (temp1 ->nxt == NULL){
+//       displayInfo();
 //       delete temp1;
 //       start_ptr = NULL;
 //     }
@@ -284,6 +306,7 @@ void add_To_Middle(){
 //         temp2 = temp1;
 //         temp1 = temp1 ->nxt;
 //       }
+//       displayInfo();
 //       delete temp1;
 //       temp2 ->nxt = NULL;
 //     }
@@ -293,8 +316,9 @@ void add_To_Middle(){
 /* if not empty will remove the first element untill it is empty */
 void purge_List(){
   if(empty()){
-    printLine('*');
-    CenterString("The list is alreaddy empty!");
+    CenterString("*******************************");
+    CenterString("* The list is alreaddy empty! *");
+    CenterString("*******************************");
   }
   else
     do{
@@ -305,8 +329,9 @@ void purge_List(){
 /* will display each node untill it reaches the end */
 void Display_List(){
   if(empty()){
-    printLine('*');
-    CenterString("The list is empty!");
+    CenterString("**********************");
+    CenterString("* The list is empty! *");
+    CenterString("**********************");
   }
   else{
     printLine('=');
@@ -331,13 +356,14 @@ inline bool empty(){
 /* deletes the node with the ID */
 void delete_middlenode(int search){
   if(empty()){
-    printLine('*');
-    LeftString("The list is empty!");
+    CenterString("**********************");
+    CenterString("* The list is empty! *");
+    CenterString("**********************");
   }
   else if(Search_List(search)){
     displayInfo(); //display info
     // if temp 2 is NULL that means the first node
-    // matches the one being seached for so delete that node
+    // matches the one being seached for so delete the first node
     if (temp2 == NULL)
       delete_start_node();
     else{
@@ -350,8 +376,9 @@ void delete_middlenode(int search){
 /* changes the node with the ID */
 void Modify_Node(int search){
   if(empty()){
-    printLine('*');
-    LeftString("The list is empty!");
+    CenterString("**********************");
+    CenterString("* The list is empty! *");
+    CenterString("**********************");
   }
   else if(Search_List(search)) //returns true if ID is in list and sets pointers
     getInfo(); //get all record information with one single function!
@@ -378,8 +405,10 @@ bool Search_List(int search){
       temp1 = temp1 ->nxt;
     } while (temp1 != NULL); //because the return statments are above;
   }
-  printLine('*');
-  LeftString(build("ID :" , search, " Is not in list"));
+  CenterString(build("***********************", -1 , string(to_string(search).length(),'*')));
+  CenterString(build("* ID :" , search, " Is not in list *"));
+  CenterString(build("***********************", -1 , string(to_string(search).length(),'*')));
+
   return false; //student ID is not in list
 }
 
