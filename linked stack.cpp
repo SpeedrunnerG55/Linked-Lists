@@ -163,8 +163,7 @@ int main() {
   return 0;
 }
 
-UNUSED
-top(){
+void top(){
   if(!empty()){
     temp1 = start_ptr;//dsiplay first node
     displayInfo();

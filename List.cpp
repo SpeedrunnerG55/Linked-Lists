@@ -194,7 +194,7 @@ int main() {
 }
 
 //UNUSED
-// first(){
+// void first(){
 //   if(!empty()){
 //     temp1 = start_ptr;//dsiplay first node
 //     displayInfo();
@@ -207,7 +207,7 @@ int main() {
 // }
 
 //UNUSED
-// last(){
+// void last(){
 //   if(!empty()){
 //     do{
 //       temp1 = temp1 ->nxt;//traverse the list untill the end is reached
