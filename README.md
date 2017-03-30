@@ -4,7 +4,7 @@ can add, delete, change any record.
 also can search and display entire list.
 
 # Uniqueness
-student IDs are generated on entery so each record will always be unique.
+student IDs are generated on entry so each record will always be unique.
 
 # Stack and Queue
-stack and queue varients are also avaluable. Inherant with less functionality.
+stack and queue variants are also available. Inherent with less functionality.
