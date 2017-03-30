@@ -91,6 +91,7 @@ void purge_stack(); //for garbage collection and purging
 bool Search_stack(int search); // searches lest for node containing ID
 inline void createNode(); //sets up new node
 inline void displayInfo(); //displays info for current node
+void top(); //displays contents of top node
 
 int main() {
   //generate random seed
@@ -113,7 +114,7 @@ int main() {
     printLine('-');
     CenterString(" 1 push      2 pop     [ Redacted ]  ");
     CenterString("[ Redacted ] 5 display  6 check empty");
-    CenterString(" 7 purge                9 quit       ");
+    CenterString(" 7 purge     8 Top      9 quit       ");
     printLine('-');
     LeftString("what do you want to do");
     LeftString("");
@@ -130,7 +131,7 @@ int main() {
     switch (Menue) {
       case 1: add_start_node();    break;
       case 2: delete_start_node(); break;
-      case 5: Display_stack();      break;
+      case 5: Display_stack();     break;
       case 6:
         if(empty()){
           CenterString("***********************");
@@ -145,7 +146,8 @@ int main() {
           CenterString("***************************");
         }
         break;
-      case 7: purge_stack(); break;
+      case 7: purge_stack();   break;
+      case 8: top();           break;
       case 9: running = false; break;
       default:
       CenterString("*****************");
@@ -160,6 +162,20 @@ int main() {
   printLine('#'); //terminate console window
   return 0;
 }
+
+UNUSED
+top(){
+  if(!empty()){
+    temp1 = start_ptr;//dsiplay first node
+    displayInfo();
+  }
+  else{
+    CenterString("**********************");
+    CenterString("* The list is empty! *");
+    CenterString("**********************");
+  }
+}
+
 
 /* gets information for ans sets up pointers for new node */
 inline void createNode(){

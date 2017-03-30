@@ -91,6 +91,7 @@ void purge_queue(); //for garbage collection and purging
 bool Search_queue(int search); //used to create unique ID
 inline void createNode(); //sets up new node
 inline void displayInfo(); //displays info for current node
+void back(); //displays contents of back node
 
 int main() {
   //generate random seed
@@ -113,7 +114,7 @@ int main() {
     printLine('-');
     CenterString("  1 enque    2 deque   [ Redacted ]  ");
     CenterString("[ Redacted ] 5 display  6 check empty");
-    CenterString("  7 purge               9 quit       ");
+    CenterString("  7 purge    8 back     9 quit       ");
     printLine('-');
     LeftString("what do you want to do");
     LeftString("");
@@ -144,7 +145,8 @@ int main() {
           CenterString("***************************");
         }
         break;
-      case 7: purge_queue(); break;
+      case 7: purge_queue();   break;
+      case 8: back();          break;
       case 9: running = false; break;
       default:
       CenterString("*****************");
@@ -158,6 +160,20 @@ int main() {
   LeftString("Done!");
   printLine('#'); //terminate console window
   return 0;
+}
+
+void back(){
+  if(!empty()){
+    do{
+      temp1 = temp1 ->nxt;//traverse the list untill the end is reached
+    }while (temp1 ->nxt != NULL);
+    displayInfo();
+  }
+  else{
+    CenterString("**********************");
+    CenterString("* The list is empty! *");
+    CenterString("**********************");
+  }
 }
 
 /* gets information for ans sets up pointers for new node */

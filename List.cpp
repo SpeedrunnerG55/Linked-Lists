@@ -96,6 +96,9 @@ void Modify_Node(int search); // modifies the node that contains the search ID
 bool Search_List(int search); // searches lest for node containing ID
 inline void createNode(); //sets up new node
 inline void displayInfo(); //displays info for current node
+// void first(); //unused
+// void last(); //unused
+
 
 int main() {
   //generate random seed
@@ -189,6 +192,34 @@ int main() {
   printLine('#'); //terminate console window
   return 0;
 }
+
+//UNUSED
+// first(){
+//   if(!empty()){
+//     temp1 = start_ptr;//dsiplay first node
+//     displayInfo();
+//   }
+//   else{
+//     CenterString("**********************");
+//     CenterString("* The list is empty! *");
+//     CenterString("**********************");
+//   }
+// }
+
+//UNUSED
+// last(){
+//   if(!empty()){
+//     do{
+//       temp1 = temp1 ->nxt;//traverse the list untill the end is reached
+//     }while (temp1 ->nxt != NULL)
+//     displayInfo();
+//   }
+//   else{
+//     CenterString("**********************");
+//     CenterString("* The list is empty! *");
+//     CenterString("**********************");
+//   }
+// }
 
 /* gets information for ans sets up pointers for new node */
 inline void createNode(){
