@@ -138,7 +138,13 @@ int main() {
       case 3: getInput("Enter ID to modify",ID);
       case 4: getInput("Enter ID to search for",ID);
       if (cin.fail()){
-        Menue = 5;
+        getchar();
+        cin.clear();
+        CenterString("*****************");
+        CenterString("* INVALID INPUT *");
+        CenterString("* NOT A NUMBER  *");
+        CenterString("*****************");
+        break;
       }
       switch (Menue) {
         case 2:
@@ -151,13 +157,6 @@ int main() {
         if(Search_List(ID))
           displayInfo(); //only display info if ID is present
         break;
-        case 5:
-        getchar();
-        cin.clear();
-        CenterString("*****************");
-        CenterString("* INVALID INPUT *");
-        CenterString("* NOT A NUMBER  *");
-        CenterString("*****************");
       }
       break;
       case 5: Display_List(); break;
