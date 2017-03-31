@@ -14,7 +14,7 @@ using namespace std;
 #define getInput(output,input) cout << "| " << output << " >"; cin>>input
 
 //custom graphical functions
-const short display_Width = 40;
+const short display_Width = 76;
 inline void printLine(char weight);
 void titleLine(string str, char weight);
 void LeftString(string str);
@@ -50,7 +50,6 @@ struct node {
 Ptr start_ptr = NULL;
 //temp pointers
 Ptr temp1;
-Ptr temp2;
 
 // a self imposed limmit on the number of nodes avaluable to create not based on
 // memory limitations but just baced of the size of the ID
@@ -67,7 +66,7 @@ inline void getInfo(){
     temp1 ->year = rand() % 8 + 1994;
     temp1 ->month = rand() % 12 + 1;
     temp1 ->day = rand() % 20 + 1;
-    switch (rand() % 10) {
+    switch (rand() % 20) {
       case 0: temp1 ->name = "Bob";    break;
       case 1: temp1 ->name = "Bill";   break;
       case 2: temp1 ->name = "Mike";   break;
@@ -78,6 +77,16 @@ inline void getInfo(){
       case 7: temp1 ->name = "Roe";    break;
       case 8: temp1 ->name = "Larry";  break;
       case 9: temp1 ->name = "Henery"; break;
+      case 10: temp1 ->name = "Tom";    break;
+      case 11: temp1 ->name = "Tim";   break;
+      case 12: temp1 ->name = "Sam";   break;
+      case 13: temp1 ->name = "Suzie";    break;
+      case 14: temp1 ->name = "Sue";  break;
+      case 15: temp1 ->name = "Elon";  break;
+      case 16: temp1 ->name = "Dan";   break;
+      case 17: temp1 ->name = "Adam";    break;
+      case 18: temp1 ->name = "John";  break;
+      case 19: temp1 ->name = "Luke"; break;
     }
     temp1 ->height = rand() % 3 + 4;
   }
@@ -94,13 +103,21 @@ inline void getInfo(){
 /* Displays contents of current node that temp1 is pointing at */
 inline void displayInfo(){
   printLine('-');
-  LeftString(build("Name   :",-1,temp1 ->name));
-  LeftString(build("ID     :",   temp1 ->ID,""));
-  LeftString(      "D.O.B.  ");
-  LeftString(build("  Year :",   temp1 ->year,""));
-  LeftString(build("  Month:",   temp1 ->month,""));
-  LeftString(build("  Day  :",   temp1 ->day,""));
-  LeftString(build("Height :",   temp1 ->height,""));
+  string outstring;
+  outstring.append(build("Name :",-1,temp1 ->name));
+  outstring.append(string(14 -  temp1 ->name.length(),' '));
+  outstring.append(build("ID :",temp1 ->ID,""));
+  outstring.append(string(6 - to_string(temp1 ->ID).length(),' '));
+  outstring.append("D.O.B. ");
+  outstring.append(string(2 - to_string(temp1 ->day).length(),' '));
+  outstring.append(string(2 - to_string(temp1 ->month).length(),' '));
+  outstring.append(build("", temp1 ->month,"/"));
+  outstring.append(build("", temp1 ->day,  "/"));
+  outstring.append(to_string(temp1 ->year));
+  outstring.push_back(' ');
+  outstring.append(build("Height :",     temp1 ->height,""));
+  outstring.append(string(10 - to_string(temp1 ->height).length(),' '));
+  CenterString(outstring);
 }
 
 //stack functions
@@ -130,7 +147,6 @@ int main() {
   LeftString("");
 
   do{
-    if(Debug) CenterString("DEBUG ACTIVATED!");
     printLine('=');
     CenterString("Main Menue");
     printLine('-');
@@ -141,6 +157,8 @@ int main() {
     LeftString("what do you want to do");
     LeftString("");
     getInput("",Menue);
+    cout << string(100,'\n');
+    printLine('#');
     if (cin.fail()){
       getchar();
       cin.clear();
@@ -171,14 +189,18 @@ int main() {
       case 7: purge_stack();   break;
       case 8: top();           break;
       case 9: running = false; break;
-      case 999: if(Debug) Debug = false; else Debug = true; break;
+      case 999:
+      if(Debug) Debug = false;
+      else {
+        CenterString("DEBUG ACTIVATED!");
+        Debug = true; break;
+      }
       default:
       CenterString("*****************");
       CenterString("* INVALID INPUT *");
       CenterString("*****************");
     }
   } while(running);
-  printLine('*');
   LeftString("Collecting garbage...");
   purge_stack(); //garbage collection
   LeftString("Done!");
@@ -193,7 +215,7 @@ void top(){
   }
   else{
     CenterString("**********************");
-    CenterString("* The list is empty! *");
+    CenterString("* The Stack is empty! *");
     CenterString("**********************");
   }
 }
@@ -201,7 +223,6 @@ void top(){
 
 /* gets information for ans sets up pointers for new node */
 inline void createNode(){
-  printLine('-');
   int ID;
   // Search first because search will move temp 1 and 2
   // to the proper location in stack
@@ -242,7 +263,6 @@ void delete_start_node(){
   else {
     temp1 = start_ptr;
     start_ptr = start_ptr ->nxt;
-    displayInfo();
     delete temp1;
   }
 }
@@ -250,14 +270,18 @@ void delete_start_node(){
 /* if not empty will remove the first element untill it is empty */
 void purge_stack(){
   if(empty()){
-    CenterString("********************************");
-    CenterString("* The stack is alreaddy empty! *");
-    CenterString("********************************");
+    CenterString("*******************************");
+    CenterString("* The Stack is alreaddy empty! *");
+    CenterString("*******************************");
   }
-  else
+  else{
+    CenterString("**********************");
+    CenterString("* The Stack is purged *");
+    CenterString("**********************");
     do{
       delete_start_node();
     }while(!empty());
+  }
 }
 
 /* will display each node untill it reaches the end */
@@ -268,7 +292,6 @@ void Display_stack(){
     CenterString("***********************");
   }
   else{
-    printLine('=');
     CenterString("Student Stack");
     CenterString("|  Top  |");
     temp1 = start_ptr;
@@ -294,7 +317,6 @@ inline bool empty(){
 bool Search_stack(int search){
   if(!empty()){
     temp1 = start_ptr;
-    temp2 = NULL;
     do {
       if (temp1 ->ID == search){
         return true; //student ID is in stack
@@ -305,13 +327,9 @@ bool Search_stack(int search){
         break;
       }
       // Move to next node (if present)
-      temp2 = temp1;
       temp1 = temp1 ->nxt;
     } while (temp1 != NULL); //because the return statments are above;
   }
-  CenterString(build("************************", -1 , string(to_string(search).length(),'*')));
-  CenterString(build("* ID :" , search, " Is not in stack *"));
-  CenterString(build("************************", -1 , string(to_string(search).length(),'*')));
   return false; //student ID is not in stack
 }
 
