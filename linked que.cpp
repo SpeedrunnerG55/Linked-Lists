@@ -168,9 +168,9 @@ void front(){
     displayInfo();
   }
   else{
-    CenterString("**********************");
-    CenterString("* The list is empty! *");
-    CenterString("**********************");
+    CenterString("***********************");
+    CenterString("* The queue is empty! *");
+    CenterString("***********************");
   }
 }
 
