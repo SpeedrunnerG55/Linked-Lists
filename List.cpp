@@ -13,7 +13,7 @@ using namespace std;
 #define getInput(output,input) cout << "| " << output << " >"; cin>>input
 
 //custom graphical functions
-const short display_Width = 76;
+const short display_Width = 30;
 inline void printLine(char weight);
 void titleLine(string str, char weight);
 void LeftString(string str);
@@ -51,22 +51,43 @@ Ptr start_ptr = NULL;
 Ptr temp1;
 Ptr temp2;
 
+// a self imposed limmit on the number of nodes avaluable to create not based on
+// memory limitations but just baced of the size of the ID
+int TotalIDS = 10000;
+
+//switch to toggle on random node inputs to streamline debugging
+bool Debug = false;
+
 /* Prompts user to input information information
    into current node that temp1 is pointing at   */
 inline void getInfo(){
   printLine('-');
-  // Debug: comment this section before release
-  temp1 ->year = rand() % 8 + 1994;
-  temp1 ->month = rand() % 12 + 1;
-  temp1 ->day = rand() % 20 + 1;
-  temp1 ->name = "Bob"; //everyone is Bob
-  // uncomment this section before release
-  // getInput("Enter name",   temp1 ->name);
-  // LeftString("Date Of Birth");
-  // getInput("Enter year",   temp1 ->year);
-  // getInput("Enter month",  temp1 ->month);
-  // getInput("Enter day",    temp1 ->day);
-  // getInput("Enter height", temp1 ->height);
+  if(Debug){
+    temp1 ->year = rand() % 8 + 1994;
+    temp1 ->month = rand() % 12 + 1;
+    temp1 ->day = rand() % 20 + 1;
+    switch (rand() % 10) {
+      case 0: temp1 ->name = "Bob";    break;
+      case 1: temp1 ->name = "Bill";   break;
+      case 2: temp1 ->name = "Mike";   break;
+      case 3: temp1 ->name = "Joe";    break;
+      case 4: temp1 ->name = "Sarah";  break;
+      case 5: temp1 ->name = "Sandy";  break;
+      case 6: temp1 ->name = "Jill";   break;
+      case 7: temp1 ->name = "Roe";    break;
+      case 8: temp1 ->name = "Larry";  break;
+      case 9: temp1 ->name = "Henery"; break;
+    }
+    temp1 ->height = rand() % 3 + 4;
+  }
+  else{
+    getInput("Enter name",   temp1 ->name);
+    LeftString("Date Of Birth");
+    getInput("Enter year",   temp1 ->year);
+    getInput("Enter month",  temp1 ->month);
+    getInput("Enter day",    temp1 ->day);
+    getInput("Enter height", temp1 ->height);
+  }
 }
 
 /* Displays contents of current node that temp1 is pointing at */
@@ -99,6 +120,7 @@ inline void displayInfo(); //displays info for current node
 // void last(); //unused
 
 
+
 int main() {
   //generate random seed
   srand(time(NULL));
@@ -115,6 +137,7 @@ int main() {
   LeftString("");
 
   do{
+    if(Debug) CenterString("DEBUG ACTIVATED!");
     printLine('=');
     CenterString("Main Menue");
     printLine('-');
@@ -178,6 +201,7 @@ int main() {
         break;
       case 7: purge_List(); break;
       case 9: running = false; break;
+      case 999: if(Debug) Debug = false; else Debug = true; break;
       default:
         CenterString("*****************");
         CenterString("* INVALID INPUT *");
@@ -217,7 +241,7 @@ int main() {
 //     CenterString("**********************");
 //     CenterString("* The list is empty! *");
 //     CenterString("**********************");
-//   }
+//   }switch (name) {
 // }
 
 /* gets information for ans sets up pointers for new node */
@@ -228,7 +252,7 @@ inline void createNode(){
   // to the proper location in list and search will set up
   // temp 1 and 2 for inserting a node inbetween them if needed
   do{
-    ID = rand() % 100000;
+    ID = rand() % TotalIDS;
     LeftString(build("Generated ",ID,""));
   }while(Search_List(ID) && !empty());
   // Reserve space for new node and fill it with data
