@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <iomanip>
 
 /*
@@ -57,17 +56,17 @@ Ptr temp2;
 inline void getInfo(){
   printLine('-');
   // Debug: comment this section before release
-  // temp1 ->year = rand() % 8 + 1994;
-  // temp1 ->month = rand() % 12 + 1;
-  // temp1 ->day = rand() % 20 + 1;
-  // temp1 ->name = "Bob"; //everyone is Bob
+  temp1 ->year = rand() % 8 + 1994;
+  temp1 ->month = rand() % 12 + 1;
+  temp1 ->day = rand() % 20 + 1;
+  temp1 ->name = "Bob"; //everyone is Bob
   // uncomment this section before release
-  getInput("Enter name",   temp1 ->name);
-  LeftString("Date Of Birth");
-  getInput("Enter year",   temp1 ->year);
-  getInput("Enter month",  temp1 ->month);
-  getInput("Enter day",    temp1 ->day);
-  getInput("Enter height", temp1 ->height);
+  // getInput("Enter name",   temp1 ->name);
+  // LeftString("Date Of Birth");
+  // getInput("Enter year",   temp1 ->year);
+  // getInput("Enter month",  temp1 ->month);
+  // getInput("Enter day",    temp1 ->day);
+  // getInput("Enter height", temp1 ->height);
 }
 
 /* Displays contents of current node that temp1 is pointing at */
@@ -136,46 +135,46 @@ int main() {
       continue;
     }
     switch (Menue) {
-      case 1: add_To_Middle();   break;
-      case 2: getInput("Enter ID to delete", ID);
-      case 3: getInput("Enter ID to modify",ID);
-      case 4: getInput("Enter ID to search for",ID);
-      if (cin.fail()){
-        getchar();
-        cin.clear();
-        CenterString("*****************");
-        CenterString("* INVALID INPUT *");
-        CenterString("* NOT A NUMBER  *");
-        CenterString("*****************");
-        break;
-      }
-      switch (Menue) {
-        case 2:
-        delete_middlenode(ID);
-        break;
-        case 3:
-        Modify_Node(ID);
-        break;
-        case 4:
-        if(Search_List(ID))
-          displayInfo(); //only display info if ID is present
-        break;
-      }
+      case 1: add_To_Middle(); break;
+      case 2:
+      case 3:
+      case 4:
+        switch (Menue) {
+          case 2: getInput("Enter ID to delete", ID);    break;
+          case 3: getInput("Enter ID to modify",ID);     break;
+          case 4: getInput("Enter ID to search for",ID); break;
+        }
+        if (cin.fail()){
+          getchar();
+          cin.clear();
+          CenterString("*****************");
+          CenterString("* INVALID INPUT *");
+          CenterString("* NOT A NUMBER  *");
+          CenterString("*****************");
+          break;
+        }
+        switch (Menue) {
+          case 2: delete_middlenode(ID); break;
+          case 3: Modify_Node(ID); break;
+          case 4:
+          if(Search_List(ID)){
+            displayInfo(); //only display info if ID is present
+          }
+          break;
+        }
       break;
       case 5: Display_List(); break;
       case 6:
+        CenterString("**************************");
         if(empty()){
-          CenterString("**********************");
-          CenterString("*        YES         *");
-          CenterString("* The list is empty! *");
-          CenterString("**********************");
+          CenterString("*           YES          *");
+          CenterString("*    The list is empty!  *");
         }
         else{
-          CenterString("**************************");
           CenterString("*           NO           *");
           CenterString("* The list is not empty! *");
-          CenterString("**************************");
         }
+        CenterString("**************************");
         break;
       case 7: purge_List(); break;
       case 9: running = false; break;
@@ -265,7 +264,6 @@ void delete_start_node(){
   else {
     temp1 = start_ptr;
     start_ptr = start_ptr ->nxt;
-    displayInfo();
     delete temp1;
   }
 }
