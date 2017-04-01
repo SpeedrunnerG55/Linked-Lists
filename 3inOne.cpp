@@ -55,6 +55,16 @@ int TotalIDS = 10000;
 //switch to toggle on random node inputs to streamline debugging
 bool Debug = false;
 
+//switch between types of programs
+short type = 0;
+
+//message for each behavior
+string behavior[3] = {
+  "List ",
+  "Queue",
+  "Stack"
+};
+
 /* Prompts user to input information information
    into current node that temp1 is pointing at   */
 inline void getInfo(){
@@ -114,19 +124,19 @@ inline void displayInfo(){
 
 //list functions
 void Display_List(); //displays whole list
-void add_start_node(); // used in add_To_Middle
-void add_To_Middle(); // used for adding nodes
-void delete_start_node(); //used in purge_List
-void delete_middlenode(int search); // used for removing nodes
-// void add_node_at_end(); //unused
+void add_start_node(); // used in list and stack
+void add_To_Middle(); // list
+void delete_start_node(); //list stack and que
+void delete_middlenode(int search); // used in que
+void add_node_at_end(); //used in queue
 // void delete_end_node(); //unused because deleting from front is easier (more eficient)
-inline bool empty(); //returns true of false if list if empty
-void purge_List(); //for garbage collection and purging
-void Modify_Node(int search); // modifies the node that contains the search ID
-bool Search_List(int search); // searches lest for node containing ID
-inline void createNode(); //sets up new node
-inline void displayInfo(); //displays info for current node
-// void first(); //unused
+inline bool empty(); // used in list and stack
+void purge_List(); // used in list and stack
+void Modify_Node(int search); // used in list
+bool Search_List(int search); // used in list
+inline void createNode(); //list stack and que
+inline void displayInfo(); //list stack and que
+void first(); //used in que and stack
 // void last(); //unused
 
 
@@ -143,19 +153,40 @@ int main() {
 
   //Print Title
   printLine('#');
-  CenterString("Dynamic List v1.1");
+  CenterString("Super List v1.0");
   LeftString("");
 
   do{
     printLine('=');
     CenterString("Main Menue");
     printLine('-');
-    CenterString("1 add     2 delete   3 modify");
-    CenterString("4 search  5 display  6 empty?");
-    CenterString("7 purge              9 quit  ");
+    CenterString("Current Behavior");
+    CenterString(behavior[type]);
+    printLine('-');
+    switch (type) {
+      case 0:
+      CenterString("1 add     2 delete    3 modify");
+      CenterString("4 search [ Redacted ] 6 empty?");
+      CenterString("7 purge  [ Redacted ] 9 quit  ");
+      CenterString("      10 Change behavior      ");
+      break;
+      case 1:
+      CenterString("  1 enque    2 deque    [ Redacted ]");
+      CenterString("[ Redacted ][ Redacted ] 6 empty?   ");
+      CenterString("  7 purge    8 front     9 quit     ");
+      CenterString("         10 Change behavior         ");
+      break;
+      case 2:
+      CenterString(" 1 push      2 pop      [ Redacted ]");
+      CenterString("[ Redacted ][ Redacted ] 6 empty?   ");
+      CenterString(" 7 purge     8 Top       9 quit     ");
+      CenterString("         10 Change behavior         ");
+      break;
+    }
     printLine('-');
     LeftString("what do you want to do");
     LeftString("");
+    Display_List();
     getInput("",Menue);
     cout << string(100,'\n');
     printLine('#');
@@ -168,41 +199,64 @@ int main() {
       CenterString("*****************");
       continue;
     }
+    if(((type != 0) && (Menue == 3 || Menue == 4)) ||
+       ((type == 0) && (Menue == 8))){
+      CenterString("******************");
+      CenterString("* This option is *");
+      CenterString("*    Redacted    *");
+      CenterString("******************");
+      continue;
+    }
     switch (Menue) {
-      case 1: add_To_Middle(); break;
+      case 1:
+      switch (type) {
+        case 0: add_To_Middle();   break;
+        case 1: add_node_at_end(); break;
+        case 2: add_start_node();  break;
+      }
+      break;
       case 2:
       case 3:
-      case 4: CenterString("Remove from list");
-        switch (Menue) {
-          case 2: getInput("Enter ID to delete", ID);    break;
-          case 3: getInput("Enter ID to modify",ID);     break;
-          case 4: getInput("Enter ID to search for",ID); break;
-        }
-        //use the same input validation for case 2,3, and 4
-        if (cin.fail()){
-          getchar();
-          cin.clear();
-          CenterString("*****************");
-          CenterString("* INVALID INPUT *");
-          CenterString("* NOT A NUMBER  *");
-          CenterString("*****************");
-          break;
-        }
-        switch (Menue) {
-          case 2: delete_middlenode(ID); break;
-          case 3: Modify_Node(ID); break;
-          case 4:
-          if(Search_List(ID)){
-            displayInfo(); //only display info if ID is present
+      case 4:
+        CenterString("Remove from");
+        CenterString(behavior[type]);
+        if(type == 0){
+          switch (Menue) {
+            case 2: getInput("Enter ID to delete", ID);    break;
+            case 3: getInput("Enter ID to modify",ID);     break;
+            case 4: getInput("Enter ID to search for",ID); break;
+            cout << string(100,'\n');
           }
-          else{
-            CenterString(build("***********************", -1 , string(to_string(ID).length(),'*')));
-            CenterString(build("* ID :" , ID, " Is not in list *"));
-            CenterString(build("***********************", -1 , string(to_string(ID).length(),'*')));
+          //use the same input validation for case 2,3, and 4
+          if (cin.fail()){
+            getchar();
+            cin.clear();
+            CenterString("*****************");
+            CenterString("* INVALID INPUT *");
+            CenterString("* NOT A NUMBER  *");
+            CenterString("*****************");
+            break;
           }
-          break;
-        } break;
-      case 5: Display_List(); break;
+          switch (Menue) {
+            case 2: delete_middlenode(ID); break;
+            case 3: Modify_Node(ID); break;
+            case 4:
+            if(Search_List(ID)){
+              displayInfo(); //only display info if ID is present
+            }
+            else{
+              string outstring;
+              CenterString(build("***********************", -1 , string(to_string(ID).length(),'*')));
+              CenterString(build("* ID :" , ID, " Is not in list *"));
+              CenterString(build("***********************", -1 , string(to_string(ID).length(),'*')));
+            }
+            break;
+          }
+        }
+        else{
+          delete_start_node();
+        }
+        break;
       case 6:
         CenterString("**************************");
         if(empty()){
@@ -215,8 +269,15 @@ int main() {
         }
         CenterString("**************************");
         break;
-      case 7: purge_List(); break;
+      case 7: purge_List();    break;
+      case 8: first();         break;
       case 9: running = false; break;
+      case 10:
+      CenterString("1 List 2 Queue 3 Stack");
+      getInput("Behavior",type);
+      cout << string(100,'\n');
+      type--; //decrement to index values
+      break;
       case 999:
       if(Debug) Debug = false;
       else {
@@ -236,18 +297,21 @@ int main() {
   return 0;
 }
 
-//UNUSED
-// void first(){
-//   if(!empty()){
-//     temp1 = start_ptr;//dsiplay first node
-//     displayInfo();
-//   }
-//   else{
-//     CenterString("**********************");
-//     CenterString("* The list is empty! *");
-//     CenterString("**********************");
-//   }
-// }
+void first(){
+  if(!empty()){
+    temp1 = start_ptr;//dsiplay first node
+    displayInfo();
+  }
+  else{
+    string outString;
+    outString.append("* the ");
+    outString.append(behavior[type]);
+    outString.append(" is empty! *");
+    CenterString(string(outString.length(),'*'));
+    CenterString(outString);
+    CenterString(string(outString.length(),'*'));
+  }
+}
 
 //UNUSED
 // void last(){
@@ -273,7 +337,7 @@ inline void createNode(){
   do{
     ID = rand() % TotalIDS;
     LeftString(build("Generated ",ID,""));
-  }while(Search_List(ID));
+  }while(Search_List(ID) && !empty());
   // Reserve space for new node and fill it with data
   temp1 = new node;
   temp1 ->ID = ID;
@@ -300,9 +364,13 @@ void add_start_node(){
    point to the next node then deletes node wtih temp           */
 void delete_start_node(){
   if(empty()){
-    CenterString("**********************");
-    CenterString("* The list is empty! *");
-    CenterString("**********************");
+    string outString;
+    outString.append("* the ");
+    outString.append(behavior[type]);
+    outString.append(" is empty! *");
+    CenterString(string(outString.length(),'*'));
+    CenterString(outString);
+    CenterString(string(outString.length(),'*'));
   }
   else {
     temp1 = start_ptr;
@@ -338,22 +406,21 @@ void add_To_Middle(){
   }
 }
 
-// UNUSED
-// /* creates a node then carries it to the end and attaches it */
-// void add_node_at_end (){
-//   createNode();
-//   // Set up link to this node
-//   if (empty())
-//   start_ptr = temp1;
-//   else {
-//     // carries the temp node to the end and attaches it to the last node
-//     temp2 = start_ptr;
-//     while (temp2 ->nxt != NULL) {
-//       temp2 = temp2 ->nxt; // Move to next link in chain
-//     }
-//     temp2->nxt = temp1;
-//   }
-// }
+/* creates a node then carries it to the end and attaches it */
+void add_node_at_end (){
+  createNode();
+  // Set up link to this node
+  if (empty())
+  start_ptr = temp1;
+  else {
+    // carries the temp node to the end and attaches it to the last node
+    temp2 = start_ptr;
+    while (temp2 ->nxt != NULL) {
+      temp2 = temp2 ->nxt; // Move to next link in chain
+    }
+    temp2->nxt = temp1;
+  }
+}
 
 // UNUSED
 // /* if not empty, if only one node exists delete the first node,
@@ -386,14 +453,22 @@ void add_To_Middle(){
 /* if not empty will remove the first element untill it is empty */
 void purge_List(){
   if(empty()){
-    CenterString("*******************************");
-    CenterString("* The list is alreaddy empty! *");
-    CenterString("*******************************");
+    string outString;
+    outString.append("* the ");
+    outString.append(behavior[type]);
+    outString.append(" is alreaddy empty! *");
+    CenterString(string(outString.length(),'*'));
+    CenterString(outString);
+    CenterString(string(outString.length(),'*'));
   }
   else{
-    CenterString("**********************");
-    CenterString("* The list is purged *");
-    CenterString("**********************");
+    string outString;
+    outString.append("* the ");
+    outString.append(behavior[type]);
+    outString.append(" is purged! *");
+    CenterString(string(outString.length(),'*'));
+    CenterString(outString);
+    CenterString(string(outString.length(),'*'));
     do{
       delete_start_node();
     }while(!empty());
@@ -403,9 +478,13 @@ void purge_List(){
 /* will display each node untill it reaches the end */
 void Display_List(){
   if(empty()){
-    CenterString("**********************");
-    CenterString("* The list is empty! *");
-    CenterString("**********************");
+    string outString;
+    outString.append("* the ");
+    outString.append(behavior[type]);
+    outString.append(" is empty! *");
+    CenterString(string(outString.length(),'*'));
+    CenterString(outString);
+    CenterString(string(outString.length(),'*'));
   }
   else{
     CenterString("Student List");
@@ -429,6 +508,7 @@ inline bool empty(){
 /* deletes the node with the ID */
 void delete_middlenode(int search){
   if(empty()){
+    // nothing special here
     CenterString("**********************");
     CenterString("* The list is empty! *");
     CenterString("**********************");
@@ -449,6 +529,7 @@ void delete_middlenode(int search){
 /* changes the node with the ID */
 void Modify_Node(int search){
   if(empty()){
+    //nothing special here
     CenterString("**********************");
     CenterString("* The list is empty! *");
     CenterString("**********************");
@@ -456,6 +537,7 @@ void Modify_Node(int search){
   else if(Search_List(search)) //returns true if ID is in list and sets pointers
     getInfo(); //get all record information with one single function!
   else{
+    //nothing special here
     CenterString(build("***********************", -1 , string(to_string(search).length(),'*')));
     CenterString(build("* ID :" , search, " Is not in list *"));
     CenterString(build("***********************", -1 , string(to_string(search).length(),'*')));

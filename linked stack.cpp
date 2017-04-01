@@ -1,6 +1,4 @@
 #include <iostream>
-#include <fstream>
-#include <iomanip>
 
 /*
 uses elements from c++11
@@ -21,11 +19,9 @@ void LeftString(string str);
 void CenterString(string str);
 
 //combine string and int and string
-inline string build(string sA, float sB, string sC) {
+inline string build(string sA, int sB, string sC) {
   if(sB != -1) { //none of the values will ever be -1 so use it as a null value
     sA.append(to_string(sB));
-    sA.erase(sA.find_last_not_of('0') + 1, string::npos); //remove trailing '0's
-    sA.erase(sA.find_last_not_of('.') + 1, string::npos); //remove trailng '.'
   }
   sA.append(sC);
   return sA;
@@ -41,8 +37,8 @@ struct node {
   int year; // Date of birth
   int month; // Date of birth
   int day; // Date of birth
-  float height; // In metres
-  Ptr prv; // Pointer to previous node
+  int feet; // feet
+  int inches; // inches
   Ptr nxt; // Pointer to next node
 };
 
@@ -63,32 +59,15 @@ bool Debug = false;
 inline void getInfo(){
   printLine('-');
   if(Debug){
-    temp1 ->year = rand() % 8 + 1994;
+    temp1 ->year = rand() % 10 + 1990;
     temp1 ->month = rand() % 12 + 1;
     temp1 ->day = rand() % 20 + 1;
-    switch (rand() % 20) {
-      case 0: temp1 ->name = "Bob";    break;
-      case 1: temp1 ->name = "Bill";   break;
-      case 2: temp1 ->name = "Mike";   break;
-      case 3: temp1 ->name = "Joe";    break;
-      case 4: temp1 ->name = "Sarah";  break;
-      case 5: temp1 ->name = "Sandy";  break;
-      case 6: temp1 ->name = "Jill";   break;
-      case 7: temp1 ->name = "Roe";    break;
-      case 8: temp1 ->name = "Larry";  break;
-      case 9: temp1 ->name = "Henery"; break;
-      case 10: temp1 ->name = "Tom";    break;
-      case 11: temp1 ->name = "Tim";   break;
-      case 12: temp1 ->name = "Sam";   break;
-      case 13: temp1 ->name = "Suzie";    break;
-      case 14: temp1 ->name = "Sue";  break;
-      case 15: temp1 ->name = "Elon";  break;
-      case 16: temp1 ->name = "Dan";   break;
-      case 17: temp1 ->name = "Adam";    break;
-      case 18: temp1 ->name = "John";  break;
-      case 19: temp1 ->name = "Luke"; break;
+    switch (rand() % 2) {
+      case 0: temp1 ->name = "LongName"; break;
+      case 1: temp1 ->name = "ShrtNm";  break;
     }
-    temp1 ->height = rand() % 3 + 4;
+    temp1 ->feet = rand() % 2 + 5;
+    temp1 ->inches = rand() % 12;
   }
   else{
     getInput("Enter name",   temp1 ->name);
@@ -96,28 +75,40 @@ inline void getInfo(){
     getInput("Enter year",   temp1 ->year);
     getInput("Enter month",  temp1 ->month);
     getInput("Enter day",    temp1 ->day);
-    getInput("Enter height", temp1 ->height);
+    LeftString("Height");
+    getInput("Feet",   temp1 ->feet);
+    getInput("Inches", temp1 ->inches);
   }
 }
 
 /* Displays contents of current node that temp1 is pointing at */
 inline void displayInfo(){
   printLine('-');
-  string outstring;
-  outstring.append(build("Name :",-1,temp1 ->name));
-  outstring.append(string(14 -  temp1 ->name.length(),' '));
-  outstring.append(build("ID :",temp1 ->ID,""));
-  outstring.append(string(6 - to_string(temp1 ->ID).length(),' '));
-  outstring.append("D.O.B. ");
-  outstring.append(string(2 - to_string(temp1 ->day).length(),' '));
-  outstring.append(string(2 - to_string(temp1 ->month).length(),' '));
-  outstring.append(build("", temp1 ->month,"/"));
-  outstring.append(build("", temp1 ->day,  "/"));
-  outstring.append(to_string(temp1 ->year));
-  outstring.push_back(' ');
-  outstring.append(build("Height :",     temp1 ->height,""));
-  outstring.append(string(10 - to_string(temp1 ->height).length(),' '));
-  CenterString(outstring);
+  //initialise output
+  string outString;
+
+  //build output
+  outString.append("ID : ");
+  outString.append(to_string(temp1 ->ID));
+  outString.append(string(5 - to_string(temp1 ->ID).length(),' '));
+  outString.append("Name : "); outString.append(temp1 ->name);
+  outString.append(string(14 -  temp1 ->name.length(),' '));
+  outString.append("D.O.B. : ");
+  outString.append(build(to_string(temp1 ->month),-1,"/"));
+  outString.append(build(to_string(temp1 ->day  ),-1,"/"));
+  outString.append(build(to_string(temp1 ->year ),-1," "));
+  outString.push_back(' '); //this should work for the next 8 thousand years
+  outString.append(string(2 - to_string(temp1 ->month).length(),' '));
+  outString.append(string(2 - to_string(temp1 ->day  ).length(),' '));
+  outString.append("Height : ");
+  outString.append(to_string(temp1 ->feet));
+  outString.append("F,");
+  outString.append(to_string(temp1 ->inches));
+  outString.append("in");
+  outString.append(string(2 - to_string(temp1 ->inches).length(),' '));
+
+  //display output
+  CenterString(outString);
 }
 
 //stack functions
@@ -203,7 +194,7 @@ int main() {
   } while(running);
   LeftString("Collecting garbage...");
   purge_stack(); //garbage collection
-  LeftString("Done!");
+  LeftString("Done! safe to close");
   printLine('#'); //terminate console window
   return 0;
 }
