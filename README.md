@@ -10,7 +10,7 @@ student IDs are generated on entry so each record will always be unique.
 stack and queue variants are also available. Inherent with less functionality.
 
 # 3 in one
-List stack and que in one program! :O
+List stack and queue in one program! :O
 share the same temp pointers and
 share the same start pointer
 
@@ -22,4 +22,4 @@ but still share the same start pointer
 3 separate start pointers are now defined in main for each type!
 
 # Sort By year
-an attempt to use multiple instances of each list type to sort a list
+an attempt to use another instance of list type to sort a list
