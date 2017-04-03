@@ -12,7 +12,7 @@ using namespace std;
 #define getInput(output,input) cout << "| " << output << " >"; cin>>input
 
 //custom graphical functions
-const short display_Width = 76;
+const short display_Width = 56;
 void printLine(char weight);
 void titleLine(string str, char weight);
 void LeftString(string str);
@@ -66,56 +66,72 @@ string behavior[3] = {
 
 /* Prompts user to input information information
    into current node that temp1 is pointing at   */
-void getInfo(Ptr temp1){
+void getInfo(Ptr input){
   printLine('-');
   if(Debug){
-    temp1 ->year = rand() % 10 + 1990;
-    temp1 ->month = rand() % 12 + 1;
-    temp1 ->day = rand() % 20 + 1;
-    switch (rand() % 2) {
-      case 0: temp1 ->name = "LongName"; break;
-      case 1: temp1 ->name = "ShrtNm";  break;
+    input ->year = rand() % 10 + 1990;
+    input ->month = rand() % 12 + 1;
+    input ->day = rand() % 20 + 1;
+    switch (rand() % 4) {
+      case 0: input ->name = "LongerName"; break;
+      case 1: input ->name = "LongName"; break;
+      case 2: input ->name = "ShrtNm";  break;
+      case 3: input ->name = "StNm";  break;
     }
-    temp1 ->feet = rand() % 2 + 5;
-    temp1 ->inches = rand() % 12;
+    input ->feet = rand() % 2 + 5;
+    input ->inches = rand() % 12;
   }
   else{
-    getInput("Enter name",   temp1 ->name);
+    getInput("Enter name",   input ->name);
     LeftString("Date Of Birth");
-    getInput("Enter year",   temp1 ->year);
-    getInput("Enter month",  temp1 ->month);
-    getInput("Enter day",    temp1 ->day);
+    getInput("Enter year",   input ->year);
+    getInput("Enter month",  input ->month);
+    getInput("Enter day",    input ->day);
     LeftString("Height");
-    getInput("Feet",   temp1 ->feet);
-    getInput("Inches", temp1 ->inches);
+    getInput("Feet",   input ->feet);
+    getInput("Inches", input ->inches);
   }
 }
 
 /* Displays contents of current node that temp1 is pointing at */
-void displayInfo(Ptr temp1){
+void displayInfo(Ptr output){
   printLine('-');
+
   //initialise output
   string outString;
 
   //build output
-  outString.append("ID : ");
-  outString.append(to_string(temp1 ->ID));
-  outString.append(string(5 - to_string(temp1 ->ID).length(),' '));
-  outString.append("Name : "); outString.append(temp1 ->name);
-  outString.append(string(14 -  temp1 ->name.length(),' '));
-  outString.append("D.O.B. : ");
-  outString.append(build(to_string(temp1 ->month),-1,"/"));
-  outString.append(build(to_string(temp1 ->day  ),-1,"/"));
-  outString.append(build(to_string(temp1 ->year ),-1," "));
+  outString.append(to_string(output ->ID));
+  outString.append(string(5 - to_string(output ->ID).length(),' '));
+  outString.append(output ->name);
+  outString.append(string(14 -  output ->name.length(),' '));
+  outString.append(build(to_string(output ->month),-1,"/"));
+  outString.append(build(to_string(output ->day  ),-1,"/"));
+  outString.append(build(to_string(output ->year ),-1," "));
   outString.push_back(' '); //this should work for the next 8 thousand years
-  outString.append(string(2 - to_string(temp1 ->month).length(),' '));
-  outString.append(string(2 - to_string(temp1 ->day  ).length(),' '));
-  outString.append("Height : ");
-  outString.append(to_string(temp1 ->feet));
+  outString.append(string(2 - to_string(output ->month).length(),' '));
+  outString.append(string(2 - to_string(output ->day  ).length(),' '));
+  outString.append(to_string(output ->feet));
   outString.append("F,");
-  outString.append(to_string(temp1 ->inches));
+  outString.append(to_string(output ->inches));
   outString.append("in");
-  outString.append(string(2 - to_string(temp1 ->inches).length(),' '));
+  outString.append(string(2 - to_string(output ->inches).length(),' '));
+
+  //display output
+  CenterString(outString);
+}
+
+/* Displays contents of current node that temp1 is pointing at */
+void displayHeadder(){
+  //initialise output
+  string outString;
+
+  //build output
+  outString.append("ID   ");
+  outString.append("Name          ");
+  outString.append("D.O.B.      ");
+  outString.append("Height ");
+  printLine('=');
 
   //display output
   CenterString(outString);
@@ -141,9 +157,6 @@ void add_start_node (Ptr &start_ptr,Ptr); // used in list and stack
 void add_To_Middle  (Ptr &start_ptr,Ptr); // list
 void add_node_at_end(Ptr &start_ptr,Ptr); //used in queue
 
-//Automaticly add an entire list to another keeping the Sort
-void Add_List_Sorted(Ptr Destination, Ptr Source);
-
 //REMOVES
 void delete_start_node (Ptr &start_ptr); //list stack and que
 void purge_List        (Ptr &start_ptr); // used in list and stack
@@ -154,9 +167,18 @@ void Modify_Node (Ptr start_ptr, int search); // used in list
 
 //implementation functions
 //these use the above functions to do more complex tasks
-void Display_Sort(Ptr start_ptr); //Displays a sorted list without affecting the original list
 
-void Sort_List(Ptr start_ptr); //sorts the original list
+//Automaticly add an entire list to another keeping the Sort
+void Add_List_Sorted(Ptr &Destination, Ptr Source);
+
+//Displays a sorted list without affecting the original list
+void Display_Sort(Ptr start_ptr);
+
+//sorts the original list
+void Sort_List(Ptr &start_ptr);
+
+//takes current sort and reverses the order
+void Invert_Order(Ptr &start_ptr);
 
 // void delete_end_node(); //unused because deleting from front is easier (more eficient)
 // void last(); //unused
@@ -169,7 +191,7 @@ int sort = 0;
 int main() {
 
   //start pointers
-  Ptr List_ptr = NULL;
+  Ptr List_ptr  = NULL;
   Ptr Queue_ptr = NULL;
   Ptr Stack_ptr = NULL;
 
@@ -200,6 +222,9 @@ int main() {
     CenterString("Current Behavior");
     CenterString(behavior[type]);
     printLine('-');
+
+    //Node operations based on type
+
     switch (type) {
       case 0:
       CenterString(" 1 add       2 delete     3 modify   ");
@@ -217,12 +242,24 @@ int main() {
       CenterString(" 7 purge     8 Top       9 quit     ");
       break;
     }
-    CenterString("10 Change behavior");
-    CenterString("11 Display Sorted List");
+
+    CenterString("10 Change behavior"); //do manual operations?
+    //List operations
+    CenterString("11 Display Sorted List");// only display the sort
+    CenterString("12 Sort List"); //sort he list perminantly
+    CenterString("13 Reverse order"); //reverse order
     printLine('-');
+
+
     LeftString("what do you want to do");
     getInput("",Menu);
+
+    //clear the screen after each input and before each operation
+    // operation
+    // menue
+    // input
     cout << string(100,'\n');
+
     printLine('#');
     if (cin.fail()){
       getchar();
@@ -277,6 +314,7 @@ int main() {
             case 3: Modify_Node(List_ptr,ID); break;
             case 4: SearchResults results = Search_List(List_ptr,ID); //unpack
             if(results.found){
+              displayHeadder();
               displayInfo(results.temp1); //only display info if ID is present
             }
             else{
@@ -312,19 +350,61 @@ int main() {
         CenterString("1 List 2 Queue 3 Stack");
         getInput("Behavior",type);
         cout << string(100,'\n');
+
+        //same input validation used for case 11 and 12
+        if((type < 1) || (type > 3)){
+          CenterString("*****************");
+          CenterString("* INVALID INPUT *");
+          CenterString("*   NOT A SORT  *");
+          CenterString("*****************");
+          break;
+        }
+
         type--; //decrement to index values
         break;
       case 11:
+      case 12:
         CenterString("Sort by");
-        CenterString("1 ID");
-        CenterString("2 Year");
-        CenterString("3 Feet");
+        CenterString("1 ID    2 Year  ");
+        CenterString("3 Feet  4 Inches");
         getInput("",sort);
-        sort--;
-        switch (type) {
-          case 0: Display_Sort(List_ptr);  break;
-          case 1: Display_Sort(Queue_ptr); break;
-          case 2: Display_Sort(Stack_ptr); break;
+
+        //same input validation used for case 11 and 12
+        if((sort < 1) || (sort > 4)){
+          CenterString("*****************");
+          CenterString("* INVALID INPUT *");
+          CenterString("*   NOT A SORT  *");
+          CenterString("*****************");
+          break;
+        }
+
+        sort--; //decrement after for less confusion
+
+        switch (Menu) {
+          case 11:
+            switch (type) {
+              case 0: Display_Sort(List_ptr);  break;
+              case 1: Display_Sort(Queue_ptr); break;
+              case 2: Display_Sort(Stack_ptr); break;
+            }
+            break;
+          case 12:
+            switch (type) {
+              case 0: Sort_List(List_ptr);  break;
+              case 1: Sort_List(Queue_ptr); break;
+              case 2: Sort_List(Stack_ptr); break;
+            }
+            break;
+        }
+        break;
+      case 888:
+        Debug = true;
+        for(int i = 0; i < 100; i++){
+          switch (type) {
+            case 0: add_To_Middle(List_ptr,   NULL); break;
+            case 1: add_node_at_end(Queue_ptr,NULL); break;
+            case 2: add_start_node(Stack_ptr, NULL); break;
+          }
         }
         break;
       case 999:
@@ -565,6 +645,7 @@ void Display_List(Ptr start_ptr){
       case 1: CenterString("Student Queue"); break;
       case 2: CenterString("Student Stack"); break;
     }
+    displayHeadder();
     temp1 = start_ptr;
     do {
       // Display details for what temp points to
@@ -627,6 +708,7 @@ int SearchCriteria(Ptr temp1){
     case 0: return (temp1 ->ID);
     case 1: return (temp1 ->year);
     case 2: return (temp1 ->feet);
+    case 3: return (temp1 ->inches);
   }
   return 0; //the compiler yelled at me
 }
@@ -663,17 +745,39 @@ SearchResults Search_List(Ptr start_ptr, int search){
   return results; //student ID is not in list
 }
 
+// LIST OPERATIONS
+
 //Sort lists based of different criteria temporaly and displays it once
 void Display_Sort(Ptr start_ptr){
-  Ptr TempListPtr  = NULL; //temporary list to store sorted list
-  Add_List_Sorted(TempListPtr,start_ptr); //Add the contents of original list new list
-  Display_List(TempListPtr); //display the sorted list
-  purge_List(TempListPtr);   //delete the sorted list
-  sort = 0; //reset global sort variable back to IDS
+
+  //Invert the order to maintin previous sorting when possible
+  Invert_Order(start_ptr);
+
+  if(!empty(start_ptr)){ //prevents extra error messages
+    Ptr TempListPtr  = NULL; //temporary list to store sorted list
+    Add_List_Sorted(TempListPtr,start_ptr); //Add the nodes to the list new list
+    Display_List(TempListPtr); //display the sorted list
+    purge_List(TempListPtr);   //delete the sorted list
+    sort = 0; //reset global sort variable back to IDS
+  }
+}
+
+//Sort lists based of different criteria and keep it
+void Sort_List(Ptr &start_ptr){
+
+  //Invert the order to maintin previous sorting when possible
+  Invert_Order(start_ptr);
+
+  if(!empty(start_ptr)){ //prevents extra error messages
+    Ptr TempListPtr  = NULL; //temporary list to store sorted list
+    Add_List_Sorted(TempListPtr,start_ptr); //Add the nodes to the list new list
+    purge_List(start_ptr);   //delete the unsortrd list
+    start_ptr = TempListPtr; //simply use the sorted list by pointing to it
+  }
 }
 
 //Adds an entire list to another maintaining the sort
-void Add_List_Sorted(Ptr Destination, Ptr Source){
+void Add_List_Sorted(Ptr &Destination, Ptr Source){
   //ADDS ONE LIST TO ANOTHER (might write this as a function)
   Ptr temp1 = Source; //store pointer to node to copy
   while(temp1 != NULL){
@@ -682,6 +786,20 @@ void Add_List_Sorted(Ptr Destination, Ptr Source){
     temp1 = temp1 ->nxt;
   }
 }
+
+void Invert_Order(Ptr &start_ptr){
+  Ptr TempStackPtr = NULL; //temporary stack to reverse order
+  //wrie list to stack while deleting list
+  //write to start to swap order
+  while(!empty(start_ptr)){
+    add_start_node(TempStackPtr,start_ptr);
+    delete_start_node(start_ptr);
+  }
+  //order is swapped all i have to do now is point at it, no while loop needed
+  start_ptr = TempStackPtr;
+}
+
+//GRAPHICAL FUNCTIONS THEY DO NOOOTHINNGGGGG
 
 /* prints a chatacter string across the display */
 void printLine(char weight){
