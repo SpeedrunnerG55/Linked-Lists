@@ -404,6 +404,8 @@ int main() {
           case 2: Invert_Order(Stack_ptr); break;
         }
         break;
+      // SUPER SECRET CASES :D
+      //engags debug and adds 100 random nodes
       case 888:
         Debug = true;
         for(int i = 0; i < 100; i++){
@@ -414,11 +416,15 @@ int main() {
           }
         }
         break;
+        //toggle debug
       case 999:
-        if(Debug) Debug = false;
+        if(Debug){
+          Debug = false;
+          CenterString("DEBUG DEACTIVATED!");
+        }
         else {
-          CenterString("DEBUG ACTIVATED!");
           Debug = true; break;
+          CenterString("DEBUG ACTIVATED!");
         }
       default:
         CenterString("*****************");
@@ -487,6 +493,12 @@ SearchResults createNode(Ptr start_ptr){
   return results;
 }
 
+void CopyNodeInfo(Ptr &destination, Ptr Source){
+  destination = new node; //make new node
+  *destination = *Source;  //store information being passed to function
+  destination ->nxt = NULL;
+}
+
 /* sets temp node to start pointer then makes the start pointer
    point to the next node then deletes node wtih temp           */
 void delete_start_node(Ptr &start_ptr){
@@ -503,12 +515,10 @@ void delete_start_node(Ptr &start_ptr){
    then points the start pointer to it (insert at front)      */
 void add_start_node(Ptr &start_ptr, Ptr temp3){
   Ptr temp1;
-  if (temp3 == NULL) temp1 = createNode(start_ptr).temp1;
-  else {
-    temp1 = new node;
-    *temp1 = *temp3;
-    temp1 ->nxt = NULL;
-  }
+  if (temp3 == NULL)
+    temp1 = createNode(start_ptr).temp1;
+  else
+    CopyNodeInfo(temp1,temp3);
   if(empty(start_ptr)){
     start_ptr = temp1;
   }
@@ -520,25 +530,25 @@ void add_start_node(Ptr &start_ptr, Ptr temp3){
 
 /* if not empty and has at least 2 nodes adds to the node behind the first */
 void add_To_Middle(Ptr &start_ptr, Ptr temp3){
-  if(empty(start_ptr)){
+  if(empty(start_ptr))
     add_start_node(start_ptr,temp3);
-  }
   else{
-    // creates node, does a search and sets up pointers for operations
-    // there is no need to do 2 searches when createnode alreaddy did a search
-    SearchResults results;
     Ptr temp1, temp2;
     if (temp3 == NULL){
-      results = createNode(start_ptr); //unpack
-      temp1 = results.temp1;
-      temp2 = results.temp2;
+      SearchResults results;
+      // creates node, does a search and sets up pointers for operations
+      results = createNode(start_ptr);
+      temp1 = results.temp1; //unpack
+      //do a second search to maintain order if it is not by ID
+      if(sort != 0)
+        temp2 = Search_List(start_ptr,SearchCriteria(temp1)).temp2;
+      else
+        temp2 = results.temp2; //unpack from first search
     }
     else {
       SearchResults results = Search_List(start_ptr,SearchCriteria(temp3));
       temp2 = results.temp2; //save where to put in list in context of list it is putting it in
-      temp1 = new node; //make new node
-      *temp1 = *temp3;  //store information being passed to function
-      temp1 ->nxt = NULL;
+      CopyNodeInfo(temp1,temp3);
     }
     // if temp 2 is NULL that means the first node is higher than
     // the one being inserted. add new node infront of the first
@@ -562,11 +572,8 @@ void add_node_at_end (Ptr &start_ptr,Ptr temp3){
   Ptr temp1;
   if (temp3 == NULL)
     temp1 = createNode(start_ptr).temp1;
-  else {
-    temp1 = new node;
-    *temp1 = *temp3;
-    temp1 ->nxt = NULL;
-  }
+  else
+    CopyNodeInfo(temp1,temp3);
   // Set up link to this node
   if (empty(start_ptr))
   start_ptr = temp1;
