@@ -141,6 +141,9 @@ void add_start_node (Ptr &start_ptr,Ptr); // used in list and stack
 void add_To_Middle  (Ptr &start_ptr,Ptr); // list
 void add_node_at_end(Ptr &start_ptr,Ptr); //used in queue
 
+//Automaticly add an entire list to another keeping the Sort
+void Add_List_Sorted(Ptr Destination, Ptr Source);
+
 //REMOVES
 void delete_start_node (Ptr &start_ptr); //list stack and que
 void purge_List        (Ptr &start_ptr); // used in list and stack
@@ -151,7 +154,9 @@ void Modify_Node (Ptr start_ptr, int search); // used in list
 
 //implementation functions
 //these use the above functions to do more complex tasks
-void Sort_List(Ptr start_ptr);
+void Display_Sort(Ptr start_ptr); //Displays a sorted list without affecting the original list
+
+void Sort_List(Ptr start_ptr); //sorts the original list
 
 // void delete_end_node(); //unused because deleting from front is easier (more eficient)
 // void last(); //unused
@@ -183,7 +188,7 @@ int main() {
   LeftString("");
 
   do{
-    LeftString("");
+    printLine('=');
     switch (type) {
       case 0: Display_List(List_ptr);  break;
       case 1: Display_List(Queue_ptr); break;
@@ -197,18 +202,18 @@ int main() {
     printLine('-');
     switch (type) {
       case 0:
-      CenterString("  1 add     2 delete     3 modify   ");
-      CenterString("  4 search [ Redacted ]  6 empty?   ");
-      CenterString("  7 purge  [ Redacted ]  9 quit     ");
+      CenterString(" 1 add       2 delete     3 modify   ");
+      CenterString(" 4 search   [ Redacted ] [ Redacted ]");
+      CenterString(" 7 purge    [ Redacted ]  9 quit     ");
       break;
       case 1:
-      CenterString("  1 enque    2 deque    [ Redacted ]");
-      CenterString("[ Redacted ][ Redacted ] 6 empty?   ");
-      CenterString("  7 purge    8 front     9 quit     ");
+      CenterString(" 1 enque     2 deque    [ Redacted ]");
+      CenterString("[ Redacted ][ Redacted ][ Redacted ]");
+      CenterString(" 7 purge     8 front     9 quit     ");
       break;
       case 2:
       CenterString(" 1 push      2 pop      [ Redacted ]");
-      CenterString("[ Redacted ][ Redacted ] 6 empty?   ");
+      CenterString("[ Redacted ][ Redacted ][ Redacted ]");
       CenterString(" 7 purge     8 Top       9 quit     ");
       break;
     }
@@ -228,8 +233,9 @@ int main() {
       CenterString("*****************");
       continue;
     }
-    if(((type != 0) && (Menue == 3 || Menue == 4)) ||
-       ((type == 0) && (Menue == 8))){
+    if(((type != 0) && (Menue == 3 || Menue == 4)) || //only list has 3 and 4
+       ((type == 0) && (Menue == 8)) ||               //list does not have 8
+       Menue == 5 || Menue == 6){                     //nothing has 5 or 6
       CenterString("******************");
       CenterString("* This option is *");
       CenterString("*    Redacted    *");
@@ -289,33 +295,6 @@ int main() {
           }
         }
         break;
-      case 6:
-        bool EMPTY;
-        switch (type) {
-          case 0: EMPTY = empty(List_ptr); break;
-          case 1: EMPTY = empty(Queue_ptr); break;
-          case 2: EMPTY = empty(Stack_ptr); break;
-        }
-        if(EMPTY){
-          string outString;
-          outString.append("* the ");
-          outString.append(behavior[type]);
-          outString.append(" is empty! *");
-          CenterString(string(outString.length(),'*'));
-          CenterString(outString);
-          CenterString(string(outString.length(),'*'));
-        }
-        else{
-          string outString;
-          outString.append("* the ");
-          outString.append(behavior[type]);
-          outString.append(" is not empty! *");
-          CenterString(string(outString.length(),'*'));
-          CenterString(outString);
-          CenterString(string(outString.length(),'*'));
-        }
-
-        break;
       case 7:
         switch (type) {
           case 0: purge_List(List_ptr);  break;
@@ -343,9 +322,9 @@ int main() {
         getInput("",sort);
         sort--;
         switch (type) {
-          case 0: Sort_List(List_ptr);  break;
-          case 1: Sort_List(Queue_ptr); break;
-          case 2: Sort_List(Stack_ptr); break;
+          case 0: Display_Sort(List_ptr);  break;
+          case 1: Display_Sort(Queue_ptr); break;
+          case 2: Display_Sort(Stack_ptr); break;
         }
         break;
       case 999:
@@ -396,11 +375,6 @@ void first(Ptr start_ptr){
 //     }while (temp1 ->nxt != NULL)
 //     displayInfo();
 //   }
-//   else{
-//     CenterString("**********************");
-//     CenterString("* The list is empty! *");
-//     CenterString("**********************");
-//   }switch (name) {
 // }
 
 /* gets information for ans sets up pointers for new node */
@@ -429,16 +403,7 @@ SearchResults createNode(Ptr start_ptr){
 /* sets temp node to start pointer then makes the start pointer
    point to the next node then deletes node wtih temp           */
 void delete_start_node(Ptr &start_ptr){
-  if(empty(start_ptr)){
-    string outString;
-    outString.append("* the ");
-    outString.append(behavior[type]);
-    outString.append(" is empty! *");
-    CenterString(string(outString.length(),'*'));
-    CenterString(outString);
-    CenterString(string(outString.length(),'*'));
-  }
-  else {
+  if(!empty(start_ptr)){
     Ptr temp1;
     temp1 = start_ptr;
     start_ptr = start_ptr ->nxt;
@@ -573,12 +538,12 @@ void purge_List(Ptr &start_ptr){
     outString.append("* the ");
     outString.append(behavior[type]);
     outString.append(" is purged! *");
-    CenterString(string(outString.length(),'*'));
-    CenterString(outString);
-    CenterString(string(outString.length(),'*'));
     do{
       delete_start_node(start_ptr);
     }while(!empty(start_ptr));
+    CenterString(string(outString.length(),'*'));
+    CenterString(outString);
+    CenterString(string(outString.length(),'*'));
   }
 }
 
@@ -623,13 +588,7 @@ bool empty(Ptr start_ptr){
 
 /* deletes the node with the ID */
 void delete_middlenode(Ptr &start_ptr, int search){
-  if(empty(start_ptr)){
-    // nothing special here
-    CenterString("**********************");
-    CenterString("* The list is empty! *");
-    CenterString("**********************");
-  }
-  else{
+  if(!empty(start_ptr)){
     SearchResults results = Search_List(start_ptr,search);
     if(results.found){
       Ptr temp1 = results.temp1;
@@ -650,13 +609,7 @@ void delete_middlenode(Ptr &start_ptr, int search){
 
 /* changes the node with the ID */
 void Modify_Node(Ptr start_ptr, int search){
-  if(empty(start_ptr)){
-    //nothing special here
-    CenterString("**********************");
-    CenterString("* The list is empty! *");
-    CenterString("**********************");
-  }
-  else{
+  if(!empty(start_ptr)){
     SearchResults results = Search_List(start_ptr,search);
     if(results.found) //returns true if ID is in list and sets pointers
       getInfo(results.temp1); //get all record information with one single function!
@@ -710,18 +663,24 @@ SearchResults Search_List(Ptr start_ptr, int search){
   return results; //student ID is not in list
 }
 
-//Sort lists based of different criteria
-void Sort_List(Ptr start_ptr){
+//Sort lists based of different criteria temporaly and displays it once
+void Display_Sort(Ptr start_ptr){
   Ptr TempListPtr  = NULL; //temporary list to store sorted list
-  Ptr temp1 = start_ptr; //store pointer to node to copy
+  Add_List_Sorted(TempListPtr,start_ptr); //Add the contents of original list new list
+  Display_List(TempListPtr); //display the sorted list
+  purge_List(TempListPtr);   //delete the sorted list
+  sort = 0; //reset global sort variable back to IDS
+}
+
+//Adds an entire list to another maintaining the sort
+void Add_List_Sorted(Ptr Destination, Ptr Source){
+  //ADDS ONE LIST TO ANOTHER (might write this as a function)
+  Ptr temp1 = Source; //store pointer to node to copy
   while(temp1 != NULL){
-    add_To_Middle(TempListPtr,temp1); //destination,source
+    add_To_Middle(Destination,temp1); //destination,source
     //traverse the list copying each data node into sorted list
     temp1 = temp1 ->nxt;
   }
-  sort = 0; //reset global sort variable back to IDS
-  Display_List(TempListPtr); //display the sorted list
-  purge_List(TempListPtr);   //delete the sorted list
 }
 
 /* prints a chatacter string across the display */
