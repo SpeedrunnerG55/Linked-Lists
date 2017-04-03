@@ -127,7 +127,7 @@ int main() {
   srand(time(NULL));
 
   //input variable
-  int Menue;
+  int Menu;
 
   //running switch
   bool running = true;
@@ -139,7 +139,7 @@ int main() {
 
   do{
     printLine('=');
-    CenterString("Main Menue");
+    CenterString("Main Menu");
     printLine('-');
     CenterString("  1 enque    2 deque   [ Redacted ]  ");
     CenterString("[ Redacted ] 5 display  6 check empty");
@@ -147,7 +147,7 @@ int main() {
     printLine('-');
     LeftString("what do you want to do");
     LeftString("");
-    getInput("",Menue);
+    getInput("",Menu);
     cout << string(100,'\n');
     printLine('#');
     if (cin.fail()){
@@ -158,7 +158,7 @@ int main() {
       CenterString("*****************");
       continue;
     }
-    switch (Menue) {
+    switch (Menu) {
       case 1: add_node_at_end();   break;
       case 2: delete_start_node(); break;
       case 5: Display_queue();     break;

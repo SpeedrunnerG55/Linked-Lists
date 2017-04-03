@@ -135,7 +135,7 @@ int main() {
   srand(time(NULL));
 
   //input variable
-  int Menue, ID;
+  int Menu, ID;
 
   //running switch
   bool running = true;
@@ -147,7 +147,7 @@ int main() {
 
   do{
     printLine('=');
-    CenterString("Main Menue");
+    CenterString("Main Menu");
     printLine('-');
     CenterString("1 add     2 delete   3 modify");
     CenterString("4 search  5 display  6 empty?");
@@ -155,7 +155,7 @@ int main() {
     printLine('-');
     LeftString("what do you want to do");
     LeftString("");
-    getInput("",Menue);
+    getInput("",Menu);
     cout << string(100,'\n');
     printLine('#');
     if (cin.fail()){
@@ -167,12 +167,12 @@ int main() {
       CenterString("*****************");
       continue;
     }
-    switch (Menue) {
+    switch (Menu) {
       case 1: add_To_Middle(); break;
       case 2:
       case 3:
       case 4: CenterString("Remove from list");
-        switch (Menue) {
+        switch (Menu) {
           case 2: getInput("Enter ID to delete", ID);    break;
           case 3: getInput("Enter ID to modify",ID);     break;
           case 4: getInput("Enter ID to search for",ID); break;
@@ -187,7 +187,7 @@ int main() {
           CenterString("*****************");
           break;
         }
-        switch (Menue) {
+        switch (Menu) {
           case 2: delete_middlenode(ID); break;
           case 3: Modify_Node(ID); break;
           case 4:

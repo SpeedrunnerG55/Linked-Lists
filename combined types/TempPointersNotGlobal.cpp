@@ -147,7 +147,7 @@ int main() {
   srand(time(NULL));
 
   //input variable
-  int Menue, ID;
+  int Menu, ID;
 
   //running switch
   bool running = true;
@@ -159,7 +159,7 @@ int main() {
 
   do{
     printLine('=');
-    CenterString("Main Menue");
+    CenterString("Main Menu");
     printLine('-');
     CenterString("Current Behavior");
     CenterString(behavior[type]);
@@ -188,7 +188,7 @@ int main() {
     LeftString("what do you want to do");
     LeftString("");
     Display_List();
-    getInput("",Menue);
+    getInput("",Menu);
     cout << string(100,'\n');
     printLine('#');
     if (cin.fail()){
@@ -200,15 +200,15 @@ int main() {
       CenterString("*****************");
       continue;
     }
-    if(((type != 0) && (Menue == 3 || Menue == 4)) ||
-       ((type == 0) && (Menue == 8))){
+    if(((type != 0) && (Menu == 3 || Menu == 4)) ||
+       ((type == 0) && (Menu == 8))){
       CenterString("******************");
       CenterString("* This option is *");
       CenterString("*    Redacted    *");
       CenterString("******************");
       continue;
     }
-    switch (Menue) {
+    switch (Menu) {
       case 1:
       switch (type) {
         case 0: add_To_Middle();   break;
@@ -222,7 +222,7 @@ int main() {
         CenterString("Remove from");
         CenterString(behavior[type]);
         if(type == 0){
-          switch (Menue) {
+          switch (Menu) {
             case 2: getInput("Enter ID to delete", ID);    break;
             case 3: getInput("Enter ID to modify",ID);     break;
             case 4: getInput("Enter ID to search for",ID); break;
@@ -238,7 +238,7 @@ int main() {
             CenterString("*****************");
             break;
           }
-          switch (Menue) {
+          switch (Menu) {
             case 2: delete_middlenode(ID); break;
             case 3: Modify_Node(ID); break;
             case 4: SearchResults results = Search_List(ID); //unpack
