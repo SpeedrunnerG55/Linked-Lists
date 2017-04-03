@@ -13,13 +13,13 @@ using namespace std;
 
 //custom graphical functions
 const short display_Width = 76;
-inline void printLine(char weight);
+void printLine(char weight);
 void titleLine(string str, char weight);
 void LeftString(string str);
 void CenterString(string str);
 
 //combine string and int and string
-inline string build(string sA, int sB, string sC) {
+string build(string sA, int sB, string sC) {
   if(sB != -1) { //none of the values will ever be -1 so use it as a null value
     sA.append(to_string(sB));
   }
@@ -56,7 +56,7 @@ bool Debug = false;
 
 /* Prompts user to input information information
    into current node that temp1 is pointing at   */
-inline void getInfo(){
+void getInfo(){
   printLine('-');
   if(Debug){
     temp1 ->year = rand() % 10 + 1990;
@@ -82,7 +82,7 @@ inline void getInfo(){
 }
 
 /* Displays contents of current node that temp1 is pointing at */
-inline void displayInfo(){
+void displayInfo(){
   printLine('-');
   //initialise output
   string outString;
@@ -115,11 +115,10 @@ inline void displayInfo(){
 void Display_stack(); //displays whole stack
 void add_start_node(); // used in add_To_Middle
 void delete_start_node(); //used in purge_stack
-inline bool empty(); //returns true of false if stack if empty
+bool empty(); //returns true of false if stack if empty
 void purge_stack(); //for garbage collection and purging
 bool Search_stack(int search); // searches lest for node containing ID
-inline void createNode(); //sets up new node
-inline void displayInfo(); //displays info for current node
+void createNode(); //sets up new node
 void top(); //displays contents of top node
 
 int main() {
@@ -213,7 +212,7 @@ void top(){
 
 
 /* gets information for ans sets up pointers for new node */
-inline void createNode(){
+void createNode(){
   int ID;
   // Search first because search will move temp 1 and 2
   // to the proper location in stack
@@ -298,7 +297,7 @@ void Display_stack(){
 }
 
 /* returns boolian value */
-inline bool empty(){
+bool empty(){
   return (start_ptr == NULL);
 }
 
@@ -325,7 +324,7 @@ bool Search_stack(int search){
 }
 
 /* prints a chatacter string across the display */
-inline void printLine(char weight){
+void printLine(char weight){
   cout << "|";
   cout << string(display_Width + 2, weight);
   cout << "|" << endl;

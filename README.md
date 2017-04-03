@@ -19,4 +19,7 @@ All three list types but now with actual temporary temp pointers
 but still share the same start pointer
 
 # Start pointers not global
-3 seperate start pointers are now defined in main for each type!
+3 separate start pointers are now defined in main for each type!
+
+# Sort By year
+an attempt to use multiple instances of each list type to sort a list
