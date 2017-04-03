@@ -47,41 +47,40 @@ struct SearchResults{
   bool found;
 };
 
-// a self imposed limmit on the number of nodes avaluable to create not based on
-// memory limitations but just baced of the size of the ID
-int TotalIDS = 10000;
-
 //switch to toggle on random node inputs to streamline debugging
 bool Debug = false;
 
-//switch between types of programs
-short type = 0;
+bool inverted = false;
 
-//message for each behavior
-string behavior[3] = {
-  "List ",
-  "Queue",
-  "Stack"
-};
+//stores sort type
+//(id like to see somone try and take this out of a global scope)
+int sort = 0;
+
+//switch between types of programs
+//(this too)
+short type = 0;
 
 /* Prompts user to input information information
    into current node that temp1 is pointing at   */
 void getInfo(Ptr input){
-  printLine('-');
   if(Debug){
     input ->year = rand() % 10 + 1990;
     input ->month = rand() % 12 + 1;
     input ->day = rand() % 20 + 1;
-    switch (rand() % 4) {
-      case 0: input ->name = "LongerName"; break;
-      case 1: input ->name = "LongName"; break;
-      case 2: input ->name = "ShrtNm";  break;
-      case 3: input ->name = "StNm";  break;
+    switch (rand() % 7) {
+      case 0: input ->name = "1";  break;
+      case 1: input ->name = "22";  break;
+      case 2: input ->name = "333";  break;
+      case 3: input ->name = "4444";  break;
+      case 4: input ->name = "55555";  break;
+      case 5: input ->name = "666666";  break;
+      case 6: input ->name = "7777777";  break;
     }
     input ->feet = rand() % 2 + 5;
     input ->inches = rand() % 12;
   }
   else{
+    printLine('-');
     getInput("Enter name",   input ->name);
     LeftString("Date Of Birth");
     getInput("Enter year",   input ->year);
@@ -93,6 +92,51 @@ void getInfo(Ptr input){
   }
 }
 
+//title information for item of list
+void displayHeadder(){
+  switch (type) {
+    case 0: CenterString("Student List");  break;
+    case 1: CenterString("Student Queue"); break;
+    case 2: CenterString("Student Stack"); break;
+  }
+  //initialise output
+  string outString;
+  //build output
+  outString.append("ID ");
+  if(sort == 0){
+    if(!inverted)
+      outString.append(" ^ ");
+    else
+      outString.append(" v ");
+  }
+  else outString.append("   ");
+
+  //isnt sortable
+  outString.append("Name          ");
+
+  outString.append("D.O.B.   ");
+  if((sort == 1) || (sort == 2) || (sort == 3)){
+    if(!inverted)
+      outString.append(" ^ ");
+    else
+      outString.append(" v ");
+  }
+  else outString.append("   ");
+
+  outString.append("Height ");
+  if((sort == 4) || (sort == 5)){
+    if(!inverted)
+      outString.append(" ^ ");
+    else
+      outString.append(" v ");
+  }
+  else outString.append("   ");
+
+  printLine('=');
+  //display output
+  CenterString(outString);
+}
+
 /* Displays contents of current node that temp1 is pointing at */
 void displayInfo(Ptr output){
   printLine('-');
@@ -102,40 +146,34 @@ void displayInfo(Ptr output){
 
   //build output
   outString.append(to_string(output ->ID));
-  outString.append(string(5 - to_string(output ->ID).length(),' '));
+  outString.append(string(6 - to_string(output ->ID).length(),' '));
   outString.append(output ->name);
   outString.append(string(14 -  output ->name.length(),' '));
   outString.append(build(to_string(output ->month),-1,"/"));
   outString.append(build(to_string(output ->day  ),-1,"/"));
   outString.append(build(to_string(output ->year ),-1," "));
-  outString.push_back(' '); //this should work for the next 8 thousand years
+  outString.append(string(5 - to_string(output ->year).length(),' '));
   outString.append(string(2 - to_string(output ->month).length(),' '));
   outString.append(string(2 - to_string(output ->day  ).length(),' '));
   outString.append(to_string(output ->feet));
   outString.append("F,");
   outString.append(to_string(output ->inches));
-  outString.append("in");
+  outString.append("in   ");
   outString.append(string(2 - to_string(output ->inches).length(),' '));
 
   //display output
   CenterString(outString);
 }
 
-/* Displays contents of current node that temp1 is pointing at */
-void displayHeadder(){
-  //initialise output
-  string outString;
+//terminatting information for list
+void displayFooter();
 
-  //build output
-  outString.append("ID   ");
-  outString.append("Name          ");
-  outString.append("D.O.B.      ");
-  outString.append("Height ");
-  printLine('=');
-
-  //display output
-  CenterString(outString);
-}
+//message for each behavior
+string behavior[3] = {
+  "List ",
+  "Queue",
+  "Stack"
+};
 
 //list functions
 //functions that do not change the start pointer
@@ -183,10 +221,9 @@ void Invert_Order(Ptr &start_ptr);
 // void delete_end_node(); //unused because deleting from front is easier (more eficient)
 // void last(); //unused
 
-
-//stores sort type
-int sort = 0;
-
+// a self imposed limmit on the number of nodes avaluable to create not based on
+// memory limitations but just baced of the size of the ID
+int TotalIDS = 10000;
 
 int main() {
 
@@ -246,10 +283,9 @@ int main() {
     CenterString("10 Change behavior"); //do manual operations?
     //List operations
     CenterString("11 Display Sorted List");// only display the sort
-    CenterString("12 Sort List"); //sort he list perminantly
-    CenterString("13 Reverse order"); //reverse order
+    CenterString("12 Sort List (beta feature ,results may varry)"); //sort he list perminantly
+    CenterString("13 Reverse order (beta feature, results may varry)"); //reverse order
     printLine('-');
-
 
     LeftString("what do you want to do");
     getInput("",Menu);
@@ -281,6 +317,8 @@ int main() {
     }
     switch (Menu) {
       case 1:
+        CenterString("Add to");
+        CenterString(behavior[type]);
         switch (type) {
           case 0: add_To_Middle(List_ptr,   NULL); break;
           case 1: add_node_at_end(Queue_ptr,NULL); break;
@@ -297,7 +335,6 @@ int main() {
             case 2: getInput("Enter ID to delete", ID);    break;
             case 3: getInput("Enter ID to modify",ID);     break;
             case 4: getInput("Enter ID to search for",ID); break;
-            cout << string(100,'\n');
           }
           //use the same input validation for case 2,3, and 4
           if (cin.fail()){
@@ -365,12 +402,13 @@ int main() {
       case 11:
       case 12:
         CenterString("Sort by");
-        CenterString("1 ID    2 Year  ");
-        CenterString("3 Feet  4 Inches");
+        CenterString("1 ID");
+        CenterString("2 Year 3 Month 4 Day");
+        CenterString("5 Feet 6 Inches");
         getInput("",sort);
 
         //same input validation used for case 11 and 12
-        if((sort < 1) || (sort > 4)){
+        if((sort < 1) || (sort > 6)){
           CenterString("*****************");
           CenterString("* INVALID INPUT *");
           CenterString("*   NOT A SORT  *");
@@ -389,6 +427,7 @@ int main() {
             }
             break;
           case 12:
+            inverted = false; //currently does not obey inversion
             switch (type) {
               case 0: Sort_List(List_ptr ); break;
               case 1: Sort_List(Queue_ptr); break;
@@ -398,6 +437,9 @@ int main() {
         }
         break;
         case 13:
+          if (!inverted) inverted = true;
+          else inverted = false;
+          CenterString("Invert List!");
         switch (type) {
           case 0: Invert_Order(List_ptr ); break;
           case 1: Invert_Order(Queue_ptr); break;
@@ -407,6 +449,7 @@ int main() {
       // SUPER SECRET CASES :D
       //engags debug and adds 100 random nodes
       case 888:
+        CenterString("Add 100 :D");
         Debug = true;
         for(int i = 0; i < 100; i++){
           switch (type) {
@@ -420,12 +463,13 @@ int main() {
       case 999:
         if(Debug){
           Debug = false;
-          CenterString("DEBUG DEACTIVATED!");
+          CenterString("DEBUG DEACTIVATED! :)");
         }
         else {
-          Debug = true; break;
-          CenterString("DEBUG ACTIVATED!");
+          Debug = true;
+          CenterString("DEBUG ACTIVATED!   :D");
         }
+        break;
       default:
         CenterString("*****************");
         CenterString("* INVALID INPUT *");
@@ -442,6 +486,40 @@ int main() {
   LeftString("Done! safe to close");
   printLine('#'); //terminate console window
   return 0;
+}
+
+/* will display each node untill it reaches the end */
+void Display_List(Ptr start_ptr){
+  Ptr temp1;
+  if(empty(start_ptr)){
+    string outString;
+    outString.append("* the ");
+    outString.append(behavior[type]);
+    outString.append(" is empty! *");
+    CenterString(string(outString.length(),'*'));
+    CenterString(outString);
+    CenterString(string(outString.length(),'*'));
+  }
+  else{
+    displayHeadder();
+    temp1 = start_ptr;
+    do {
+      // Display details for what temp points to
+      displayInfo(temp1);
+      // Move to next node (if present)
+      temp1 = temp1 ->nxt;
+    } while (temp1 != NULL);
+    displayFooter();
+  }
+}
+
+void displayFooter(){
+  printLine('+');
+  switch (type) {
+    case 0: CenterString("End of List");  break;
+    case 1: CenterString("Back of Queue"); break;
+    case 2: CenterString("Bottom of Stack"); break;
+  }
 }
 
 void first(Ptr start_ptr){
@@ -479,7 +557,8 @@ SearchResults createNode(Ptr start_ptr){
   // temp 1 and 2 for inserting a node inbetween them if needed
   do{
     ID = rand() % TotalIDS;
-    LeftString(build("Generated ",ID,""));
+    if (!Debug) //try to prevent spam while debugging
+      LeftString(build("Generated ",ID,""));
     results = Search_List(start_ptr, ID); //pack each iteration untill not found unless empty
   }while(results.found);
   Ptr temp1 = results.temp1;
@@ -487,7 +566,8 @@ SearchResults createNode(Ptr start_ptr){
   temp1 = new node;
   temp1 ->ID = ID;
   getInfo(temp1); //get all record information with one single function!
-  LeftString(build("Assigned ID ", temp1 ->ID ," To Student"));
+  if (!Debug) //try to prevent spam while debugging
+    LeftString(build("Assigned ID ", temp1 ->ID ," To Student"));
   temp1 ->nxt = NULL;
   results.temp1 = temp1; //pack
   return results;
@@ -641,41 +721,6 @@ void purge_List(Ptr &start_ptr){
   }
 }
 
-/* will display each node untill it reaches the end */
-void Display_List(Ptr start_ptr){
-  Ptr temp1;
-  if(empty(start_ptr)){
-    string outString;
-    outString.append("* the ");
-    outString.append(behavior[type]);
-    outString.append(" is empty! *");
-    CenterString(string(outString.length(),'*'));
-    CenterString(outString);
-    CenterString(string(outString.length(),'*'));
-  }
-  else{
-    switch (type) {
-      case 0: CenterString("Student List");  break;
-      case 1: CenterString("Student Queue"); break;
-      case 2: CenterString("Student Stack"); break;
-    }
-    displayHeadder();
-    temp1 = start_ptr;
-    do {
-      // Display details for what temp points to
-      displayInfo(temp1);
-      // Move to next node (if present)
-      temp1 = temp1 ->nxt;
-    } while (temp1 != NULL);
-    printLine('+');
-    switch (type) {
-      case 0: CenterString("End of List");  break;
-      case 1: CenterString("Back of Queue"); break;
-      case 2: CenterString("Bottom of Stack"); break;
-    }
-  }
-}
-
 /* returns boolian value */
 bool empty(Ptr start_ptr){
   return (start_ptr == NULL);
@@ -721,10 +766,12 @@ int SearchCriteria(Ptr temp1){
   switch (sort) {
     case 0: return (temp1 ->ID);
     case 1: return (temp1 ->year);
-    case 2: return (temp1 ->feet);
-    case 3: return (temp1 ->inches);
+    case 2: return (temp1 ->month);
+    case 3: return (temp1 ->day);
+    case 4: return (temp1 ->feet);
+    case 5: return (temp1 ->inches);
   }
-  return 0; //the compiler yelled at me
+  return 0; //the compiler yelled at me (i guess default to ID)
 }
 
 /* if not empty traverses the list
