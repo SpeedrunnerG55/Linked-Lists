@@ -383,18 +383,25 @@ int main() {
         switch (Menu) {
           case 11:
             switch (type) {
-              case 0: Display_Sort(List_ptr);  break;
+              case 0: Display_Sort(List_ptr ); break;
               case 1: Display_Sort(Queue_ptr); break;
               case 2: Display_Sort(Stack_ptr); break;
             }
             break;
           case 12:
             switch (type) {
-              case 0: Sort_List(List_ptr);  break;
+              case 0: Sort_List(List_ptr ); break;
               case 1: Sort_List(Queue_ptr); break;
               case 2: Sort_List(Stack_ptr); break;
             }
             break;
+        }
+        break;
+        case 13:
+        switch (type) {
+          case 0: Invert_Order(List_ptr ); break;
+          case 1: Invert_Order(Queue_ptr); break;
+          case 2: Invert_Order(Stack_ptr); break;
         }
         break;
       case 888:
